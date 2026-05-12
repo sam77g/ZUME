@@ -5,6 +5,14 @@
     margin: 0;
     padding: 0;
 }
+h1 {
+    font-family: "MuseoModerno"; 
+    font-weight: bolder;
+    color: #fff; 
+    font-size: 3em;
+    padding: 0px;
+    margin: 0px;
+}
 
 body {
     display: flexbox; 
@@ -18,12 +26,17 @@ body {
 
 .dropdown{
     display: inline-block;
-    position: relative;
+    position: fixed;
+    left: 0px;
+    top: 0px;
     padding: 10px;
     margin: 0px;
+    overflow: visible;
 }
 
 .dropdown button{
+    position: relative;
+    left: 0px;
     background-color: rgb(0, 160, 0);
     color: white;
     margin: 0px;
@@ -79,7 +92,7 @@ body {
     justify-content: center;
     align-items: center;
     min-width: auto;
-    max-width: 400px;
+    max-width: 35vh;
     min-height: auto;
     max-height: 30vh;
     text-align: center; 
