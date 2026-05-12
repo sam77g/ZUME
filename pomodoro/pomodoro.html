@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Simples</title>
+    <link rel="stylesheet" href="pomodoro.css">
+</head>
+
+<body>
+
+    <div class="dropdown">
+        <button>
+            <img src="/logos_google/menu_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+        </button>
+        <div class="menu">
+            <a href="/trabalhos/tde2.0/frontend/conta.html"> <img src="/trabalhos/tde2.0/logos_google/person_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Conta"></a>
+            <a href="/trabalhos/tde2.0/frontend/achivments.html"> <img src="/logos_google/star_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Conquistas"></a>
+            <a href="/trabalhos/tde2.0/frontend/teste.html"> <img src="/trabalhos/tde2.0/logos_google/book_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt=""></a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Pomodoro</h1>
+
+        <div id="timer">25:00</div>
+        <!-- Tempo inicial: 25 minutos -->
+
+        <button class="start" onclick="startTimer()">
+            <img src="/trabalhos/tde2.0/logos_google/play_arrow_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+        </button>
+        <!-- chama função startTimer ao clicar -->
+
+        <button class="pause" onclick="pauseTimer()">
+            <img src="/trabalhos/tde2.0/logos_google/pause_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+        </button>
+        <!-- chama função pauseTimer -->
+
+        <button class="reset" onclick="resetTimer()">
+            <img src="/trabalhos/tde2.0/logos_google/refresh_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+        </button>
+        <!-- chama função resetTimer -->
+    </div>
+
+    <script src="pomodoro.js">
+        let time = 25 * 60; 
+        // tempo em segundos (25 minutos * 60)
+
+        let interval = null; 
+        // variável que vai guardar o setInterval
+
+        function updateDisplay() {
+            let minutes = Math.floor(time / 60);
+            // pega os minutos inteiros
+
+            let seconds = time % 60;
+            // pega o resto (segundos)
+
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            // adiciona 0 se for menor que 10 (ex: 09)
+
+            document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+            // atualiza o texto na tela
+        }
+
+        function startTimer() {
+            if (interval) return;
+            // evita criar vários timers ao mesmo tempo
+
+            interval = setInterval(() => {
+                if (time > 0) {
+                    time--;
+                    updateDisplay();
+                } else {
+                    clearInterval(interval);
+                    interval = null;
+                    alert('Tempo finalizado!');
+                }
+            }, 1000);
+            // executa a cada 1 segundo (1000 ms)
+        }
+
+        function pauseTimer() {
+            clearInterval(interval);
+            // para o contador
+
+            interval = null;
+        }
+
+        function resetTimer() {
+            clearInterval(interval);
+            interval = null;
+
+            time = 25 * 60;
+            // volta para 25 minutos
+
+            updateDisplay();
+        }
+
+        updateDisplay();
+        // inicializa o display quando a página carrega
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,217 @@
+@font-face {
+    font-family: museo moderno;
+    src: url('/fonts_google/MuseoModerno/MuseoModerno-VariableFont_wght.ttf') format('truetype');
+}
+@font-face {
+    font-family: angkor;
+    src: url(/fonts_google/Alfa_Slab_One\,Angkor/Angkor-Regular.ttf) format('truetype');
+}
+@font-face {
+    font-family: roboto;
+    src: url(/fonts_google/Alfa_Slab_One\,Angkor\,Badeen_Display\,Danfo\,Roboto/Roboto-Regular.ttf) format('truetype');
+}
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+ 
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url(/trabalhos/tde2.0/frontend/backgroun_ldps.png);
+  background-size: cover;
+  font-family: museo moderno, angkor, roboto, sans-serif;
+}
+ 
+/* CONTAINER */
+ 
+.container {
+  width: 900px;
+  height: 480px;
+  display: flex;
+  background: #005407;
+  border-radius: 20px;
+  overflow: hidden;
+}
+ 
+/* LADO ESQUERDO */
+ 
+.left {
+  width: 40%;
+  color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  padding: 32px;
+  text-align: center;
+}
+
+.icone img {
+  width: 100px;
+  height: 100px;
+    
+}
+ 
+.left h1 {
+  font-size: 1.5em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+ 
+.left p {
+  font-size: 13px;
+  opacity: 0.65;
+  margin-top: -6px;
+}
+ 
+.btn-nav {
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  background: transparent;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 0.25s, border-color 0.25s;
+}
+ 
+.btn-nav:hover {
+  background: rgba(122, 255, 65, 0.12);
+  border-color: rgba(10, 47, 0, 0.5);
+}
+ 
+.btn-nav.ativo {
+  background: rgba(122, 255, 65, 0.2);
+  border-color: rgba(10, 47, 0, 0.65);
+}
+ 
+/* LADO DIREITO */
+ 
+.right {
+  width: 60%;
+  background: rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+ 
+/* BOAS-VINDAS */
+ 
+.boas-vindas {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 24px;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+ 
+.boas-vindas .icone {
+  font-size: 36px;
+  margin-bottom: 4px;
+}
+ 
+.boas-vindas h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #16453f;
+}
+ 
+.boas-vindas span {
+  font-size: 13px;
+  color: #999;
+}
+ 
+.boas-vindas.oculto {
+  opacity: 0;
+  transform: translateY(-12px);
+  pointer-events: none;
+}
+ 
+/* FORMULÁRIOS */
+ 
+.formulario {
+  position: absolute;
+  width: 78%;
+  opacity: 0;
+  transform: translateX(20px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+ 
+.formulario.ativo {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+ 
+.formulario h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #16453f;
+  margin-bottom: 18px;
+}
+ 
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+ 
+input {
+  padding: 12px 14px;
+  border-radius: 9px;
+  border: 1.5px solid #e0e0e0;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+  color: #222;
+}
+ 
+input:focus {
+  border-color: #59a87d;
+}
+ 
+input::placeholder {
+  color: #bbb;
+}
+ 
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 9px;
+  background: #16451e;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+ 
+button:hover {
+  background: #11320a;
+}
+ 
+.link-alt {
+  font-size: 12px;
+  color: #59a87d;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 2px;
+}
