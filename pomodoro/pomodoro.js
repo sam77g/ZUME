@@ -1,87 +1,92 @@
-let time = 25 * 60;
-let interval = null;
+/* pomodoro.js — timer + salva sessão no backend C */
 
-let studySeconds = 0;
+const API = "http://localhost:8080";
+
+let time        = 25 * 60;   /* segundos */
+let interval    = null;
+let segundosEstudados = 0;   /* acumula tempo real desta sessão */
 
 function updateDisplay() {
-
-    let minutes = Math.floor(time / 60);
-    let seconds = time % 60;
-
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-
-    document.getElementById('timer').textContent =
-        `${minutes}:${seconds}`;
+    const minutes = Math.floor(time / 60);
+    let   seconds = time % 60;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    document.getElementById("timer").textContent = `${minutes}:${seconds}`;
 }
 
 function startTimer() {
-
     if (interval) return;
-
     interval = setInterval(() => {
-
         if (time > 0) {
-
             time--;
-            studySeconds++;
-
+            segundosEstudados++;
             updateDisplay();
-
         } else {
-
             clearInterval(interval);
             interval = null;
-
-            saveStudyTime();
-
-            alert('Pomodoro finalizado!');
+            salvarSessao(segundosEstudados);
+            segundosEstudados = 0;
+            alert("Pomodoro finalizado! 🍅");
         }
-
     }, 1000);
 }
 
 function pauseTimer() {
-
     clearInterval(interval);
     interval = null;
 }
 
 function resetTimer() {
-
     clearInterval(interval);
     interval = null;
 
-    time = 25 * 60;
+    /* se estava rodando, salva o que foi estudado até aqui */
+    if (segundosEstudados > 0) {
+        salvarSessao(segundosEstudados);
+        segundosEstudados = 0;
+    }
 
+    time = 25 * 60;
     updateDisplay();
 }
 
-async function saveStudyTime() {
+/* ─── salva sessão no backend ──────────────────────────────── */
+
+async function salvarSessao(duracao_seg) {
+    if (duracao_seg <= 0) return;
+
+    const usuario_id = parseInt(sessionStorage.getItem("usuario_id"));
+    if (!usuario_id) return; /* usuário não logado, ignora */
 
     try {
-
-        const response = await fetch('http://localhost:8080/salvar', {
-
-            method: 'POST',
-
-            headers: {
-                'Content-Type': 'application/json'
-            },
-
-            body: JSON.stringify({
-                segundos: studySeconds
-            })
-
+        await fetch(`${API}/salvar_sessao`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuario_id, duracao_seg })
         });
-
-        const data = await response.text();
-
-        console.log(data);
-
-    } catch (erro) {
-
-        console.log("Erro ao salvar:", erro);
+        console.log(`Sessão salva: ${duracao_seg}s`);
+    } catch (e) {
+        console.warn("Não foi possível salvar a sessão:", e);
     }
 }
 
+/* ─── busca tempo total do usuário ─────────────────────────── */
+
+async function carregarTempoTotal() {
+    const usuario_id = sessionStorage.getItem("usuario_id");
+    if (!usuario_id) return;
+
+    try {
+        const res  = await fetch(`${API}/tempo_total?usuario_id=${usuario_id}`);
+        const data = await res.json();
+
+        if (data.ok) {
+            const horas   = Math.floor(data.total_seg / 3600);
+            const minutos = Math.floor((data.total_seg % 3600) / 60);
+            const el = document.getElementById("tempo-total");
+            if (el) el.textContent = `Total estudado: ${horas}h ${minutos}min (${data.sessoes} sessões)`;
+        }
+    } catch { /* silencioso */ }
+}
+
 updateDisplay();
+carregarTempoTotal();

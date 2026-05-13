@@ -23,8 +23,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url(/trabalhos/tde2.0/frontend/backgroun_ldps.png);
-  background-size: cover;
+  /*background-image: url(/trabalhos/tde2.0/frontend/backgroun_ldps.png);
+  background-size: cover;*/
+  background: #1eaf7e;
   font-family: museo moderno, angkor, roboto, sans-serif;
 }
  

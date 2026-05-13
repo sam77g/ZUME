@@ -1,94 +1,101 @@
-const btnLogin    = document.getElementById("btnLogin");
-const btnCadastro = document.getElementById("btnCadastro");
+/* script02.js — conecta base.html ao servidor C */
+
+const API = "http://localhost:8080";
+
+/* ─── navegação entre formulários ─────────────────────────── */
+
+const boasVindas  = document.getElementById("boasVindas");
 const loginForm   = document.getElementById("loginForm");
 const cadastroForm = document.getElementById("cadastroForm");
-const boasVindas  = document.getElementById("boasVindas");
-const subtitulo   = document.getElementById("subtitulo");
-const irCadastro  = document.getElementById("irCadastro");
-const irLogin     = document.getElementById("irLogin");
-const btnEntrar   = document.getElementById("btnEntrar");
-const btnCadastrar = document.getElementById("btnCadastrar");
 
-let atual = null;
-
-function mostrar(qual) {
-  loginForm.classList.remove("ativo");
-  cadastroForm.classList.remove("ativo");
-  btnLogin.classList.remove("ativo");
-  btnCadastro.classList.remove("ativo");
-
-  if (atual === qual) {
-    atual = null;
-    boasVindas.classList.remove("oculto");
-    subtitulo.textContent = "Escolha uma opção abaixo";
-    return;
-  }
-
-  atual = qual;
-  boasVindas.classList.add("oculto");
-
-  if (qual === "login") {
-    setTimeout(() => loginForm.classList.add("ativo"), 50);
-    btnLogin.classList.add("ativo");
-    subtitulo.textContent = "Acesse sua conta";
-  } else {
-    setTimeout(() => cadastroForm.classList.add("ativo"), 50);
-    btnCadastro.classList.add("ativo");
-    subtitulo.textContent = "Crie sua conta grátis";
-  }
+function mostrar(el) {
+    [boasVindas, loginForm, cadastroForm].forEach(e => {
+        e.classList.remove("ativo");
+        e.classList.add("oculto");
+    });
+    el.classList.remove("oculto");
+    el.classList.add("ativo");
 }
 
-btnLogin.addEventListener("click", () => mostrar("login"));
-btnCadastro.addEventListener("click", () => mostrar("cadastro"));
-irCadastro.addEventListener("click", () => mostrar("cadastro"));
-irLogin.addEventListener("click", () => mostrar("login"));
+document.getElementById("btnLogin")   .addEventListener("click", () => mostrar(loginForm));
+document.getElementById("btnCadastro").addEventListener("click", () => mostrar(cadastroForm));
+document.getElementById("irCadastro") .addEventListener("click", () => mostrar(cadastroForm));
+document.getElementById("irLogin")    .addEventListener("click", () => mostrar(loginForm));
 
-// ── LOGIN ──────────────────────────────────────────────────────────────────
-btnEntrar.addEventListener("click", () => {
-  const email = document.getElementById("email").value.trim();
-  const senha = document.getElementById("senhaLogin").value.trim();
+/* ─── utilitário: exibe mensagem inline ───────────────────── */
 
-  if (!email || !senha) {
-    alert("Por favor, preencha e-mail e senha.");
-    return;
-  }
+function setMsg(formEl, texto, cor = "red") {
+    let msg = formEl.querySelector(".msg-feedback");
+    if (!msg) {
+        msg = document.createElement("p");
+        msg.className = "msg-feedback";
+        msg.style.cssText = "font-size:12px;margin-top:4px;text-align:center;";
+        formEl.appendChild(msg);
+    }
+    msg.style.color = cor;
+    msg.textContent = texto;
+}
 
-  // Salva o usuário logado no localStorage para o pomodoro.js reconhecer
-  const usuario = {
-    nome: email.split("@")[0],
-    email: email
-  };
-  localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+/* ─── cadastro ────────────────────────────────────────────── */
 
-  alert("Bem-vindo, " + email + "!");
+document.getElementById("btnCadastrar").addEventListener("click", async () => {
+    const nome  = document.getElementById("nomeUsuario").value.trim();
+    const email = document.getElementById("emailcadastro").value.trim();
+    const senha = document.getElementById("senha").value;
 
-  window.location.href = "../pomodoro/pomodoro.html";
+    if (!nome || !email || !senha) {
+        setMsg(cadastroForm, "Preencha todos os campos.");
+        return;
+    }
+
+    try {
+        const res  = await fetch(`${API}/cadastro`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nome, email, senha })
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+            setMsg(cadastroForm, "Conta criada! Faça login.", "green");
+            setTimeout(() => mostrar(loginForm), 1500);
+        } else {
+            setMsg(cadastroForm, data.msg || "Erro ao cadastrar.");
+        }
+    } catch {
+        setMsg(cadastroForm, "Não foi possível conectar ao servidor.");
+    }
 });
 
-// ── CADASTRO ───────────────────────────────────────────────────────────────
-btnCadastrar.addEventListener("click", () => {
-  const nome  = document.getElementById("nomeUsuario").value.trim();
-  const email = document.getElementById("emailcadastro").value.trim();
-  const senha = document.getElementById("senha").value.trim();
+/* ─── login ───────────────────────────────────────────────── */
 
-  if (!nome || !email || !senha) {
-    alert("Por favor, preencha todos os campos.");
-    return;
-  }
+document.getElementById("btnEntrar").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senhaLogin").value;
 
-  if (senha.length < 6) {
-    alert("A senha deve ter pelo menos 6 caracteres.");
-    return;
-  }
+    if (!email || !senha) {
+        setMsg(loginForm, "Preencha e-mail e senha.");
+        return;
+    }
 
-  // Salva o usuário recém-cadastrado no localStorage
-  const usuario = {
-    nome: nome,
-    email: email
-  };
-  localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+    try {
+        const res  = await fetch(`${API}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, senha })
+        });
+        const data = await res.json();
 
-  alert("Cadastro realizado com sucesso! Bem-vindo, " + nome + "!");
-
-  window.location.href = "../pomodoro/pomodoro.html";
+        if (data.ok) {
+            /* salva sessão do usuário no sessionStorage */
+            sessionStorage.setItem("usuario_id",   data.id);
+            sessionStorage.setItem("usuario_nome",  data.nome);
+            /* redireciona para o pomodoro */
+            window.location.href = "/pomodoro/pomodoro.html";
+        } else {
+            setMsg(loginForm, data.msg || "Credenciais incorretas.");
+        }
+    } catch {
+        setMsg(loginForm, "Não foi possível conectar ao servidor.");
+    }
 });
