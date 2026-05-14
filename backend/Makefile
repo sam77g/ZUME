@@ -3,7 +3,7 @@
 CC      = gcc
 TARGET  = server
 SRC     = server.c
-LIBS    = -lsqlite3 -lmicrohttpd -lpthread
+LIBS    = -lsqlite3 -lmicrohttpd -lpthread -lssl -lcrypto
 CFLAGS  = -Wall -Wextra -O2
 
 all: $(TARGET)
