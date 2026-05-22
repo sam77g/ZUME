@@ -91,13 +91,13 @@ body {
 
 .container {
     position: relative;
-    margin: 100px auto;
+    margin: 50px auto;
     justify-content: center;
     align-items: center;
-    min-width: auto;
-    max-width: 35vh;
-    min-height: auto;
-    max-height: 30vh;
+    min-width: 25vh;
+    max-width: 50vh;
+    min-height: 25vh;
+    max-height: 100vh;
     text-align: center; 
     background-color: #49BA65;
     padding: 30px; 
