@@ -3,139 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>account</title>
+    <title>TDE 2.0 — Conta</title>
     <link rel="icon" href="/assets/path58.png" type="image/png">
-</head>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Angkor&family=Badeen+Display&family=Danfo&family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
 
-
-h1 {
-    font-family: "MuseoModerno"; 
-    font-weight: bolder; 
-    color: #fff; 
-    font-size: 3em;
-    padding: 0px;
-    margin: 0px;
+:root {
+    --verde-main:   #49BA65;
+    --verde-escuro: #287B4D;
+    --verde-deep:   rgb(0, 100, 32);
+    --verde-claro:  #E2FFDF;
+    --branco: #fff;
+    --sombra: rgba(5, 27, 11, 0.3);
 }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    margin: 0;
+    background-color: var(--verde-claro);
+    font-family: "MuseoModerno", sans-serif;
+    color: #1a1a1a;
+    min-height: 100vh;
+}
+
+/* ── navbar ── */
+.navbar {
+    width: 100%;
+    background: var(--verde-deep);
+    padding: 14px 24px;
     display: flex;
-    justify-content: center;
     align-items: center;
-
-    background-color: #E2FFDF;
-
-    font-family: "MuseoModerno"; 
-    font-weight: bolder;
-
-    height: 100vh;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
 }
 
-.dropdown{
-    display: inline-block;
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    padding: 10px;
-    margin: 0px;
-    
-}
-
-.dropdown button{
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: #287B4D;
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 800;
     color: white;
-    margin: 0px;
-    padding: 5px;
-    border: none;
-    cursor: pointer;
-    max-width: 150px;
-    min-width: 60px;
-    min-height: 60px;
-    max-height: 150px;
-    border-radius: 50%;
-}
-
-.dropdown a{
-    display: block;
-    color: black;
     text-decoration: none;
-    padding: 10px 15px;
-    transition: transform 0.3s ease-in-out;
+    letter-spacing: 0.5px;
 }
 
-.dropdown .menu{
-    display: none;
-    position: absolute;
-    top: 60px;
-    left: 10px;
-    background-color: #287B4D;
-    border-radius: 20px;
-    min-width: 50px;
-    box-shadow: 2px 3px 5px rgb(23, 92, 23);
+.nav-logo img { width: 26px; height: 26px; }
 
-    z-index: 10;
-}
-.dropdown:hover .menu{
-    display:block;
-}
+.nav-links { display: flex; gap: 6px; }
 
-.dropdown:hover button{
-    background-color:  rgb(1, 44, 1);
-}
-
-.dropdown  a:hover{
-    background-color: rgb(0, 100, 32);
-    border-radius: 1.1em;
-    box-shadow: 3px 3px 5px rgb(8, 47, 8);
-    color: white;
-    transform: scale(1.05);
-    font-size: 1.1em;
-
-}  
-
-.container {
-    position: absolute;
-    display: grid;
-    justify-content: center;
+.nav-links a {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    background: rgba(255,255,255,0.12);
+    display: flex;
     align-items: center;
-    text-align: center; 
-
-    padding: 30px; 
-    min-width: 20vw;
-    max-width: 50vw;
-    min-height: 20vh;
-    max-height: 50vh;
-
-
-    background-color: #49BA65;
-    border-radius: 10px; 
-    box-shadow: 0 0 15px rgba(5, 27, 11, 0.5); 
+    justify-content: center;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
 }
-</style>
+
+.nav-links a:hover {
+    background: rgba(255,255,255,0.25);
+    transform: scale(1.06);
+}
+
+.nav-links img { width: 20px; height: 20px; }
+
+/* ── conteúdo ── */
+main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+}
+
+/* ── perfil ── */
+.perfil-card {
+    background: var(--verde-escuro);
+    border-radius: 20px;
+    padding: 28px 24px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 24px;
+    box-shadow: 0 6px 24px var(--sombra);
+    color: white;
+    flex-wrap: wrap;
+}
+
+.avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.avatar {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: var(--verde-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    border: 3px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: transform 0.2s;
+    overflow: hidden;
+}
+
+.avatar:hover { transform: scale(1.06); }
+
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.avatar-edit-btn {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 24px;
+    height: 24px;
+    background: var(--verde-main);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    transition: background 0.2s;
+}
+
+.avatar-edit-btn:hover { background: white; color: var(--verde-deep); }
+
+#inputAvatar { display: none; }
+
+.perfil-info { flex: 1; }
+
+.perfil-info h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.perfil-info p {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+/* ── stats ── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: var(--verde-main);
+    border-radius: 16px;
+    padding: 18px 16px;
+    text-align: center;
+    box-shadow: 0 4px 14px var(--sombra);
+    transition: transform 0.2s;
+}
+
+.stat-card:hover { transform: translateY(-3px); }
+
+.stat-card .stat-valor {
+    font-size: 26px;
+    font-weight: 900;
+    color: white;
+    line-height: 1.1;
+}
+
+.stat-card .stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+}
+
+/* ── conquistas ── */
+.secao-titulo {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--verde-deep);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.conquistas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.conquista-card {
+    background: var(--verde-escuro);
+    border-radius: 16px;
+    padding: 16px 14px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 14px var(--sombra);
+    transition: transform 0.2s, opacity 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.conquista-card.bloqueada {
+    opacity: 0.45;
+    filter: grayscale(0.6);
+}
+
+.conquista-card.destaque {
+    border: 2px solid rgba(255,255,255,0.5);
+}
+
+.conquista-card .emoji {
+    font-size: 30px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.conquista-card .nome {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.conquista-card .req {
+    font-size: 10px;
+    opacity: 0.65;
+}
+
+.conquista-card:not(.bloqueada):hover { transform: translateY(-3px); }
+
+/* badge de destaque */
+.btn-destaque {
+    margin-top: 8px;
+    font-size: 10px;
+    padding: 4px 8px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-family: "MuseoModerno", sans-serif;
+    transition: background 0.2s;
+}
+
+.btn-destaque:hover { background: rgba(255,255,255,0.15); }
+.btn-destaque.ativo  { background: rgba(255,255,255,0.25); }
+
+/* ── responsivo ── */
+@media (max-width: 520px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .perfil-card { flex-direction: column; text-align: center; }
+}
+    </style>
+</head>
 <body>
-<header>
-    <div class="dropdown">
-        <button>
-            <img src="/logos_google/menu_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="">
-        </button>
-        <div class="menu">
-            <a href="/frontend/conta.html"> <img src="/logos_google/person_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Conta"></a>
-            <a href="/frontend/teste.html"> <img src="/logos_google/book_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="teste"></a>
-            <a href="/pomodoro/pomodoro.html"> <img src="/logos_google/home_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="home"></a>
-        </div>
-        </div>
 
-</header>
+<nav class="navbar">
+    <a href="/pomodoro/pomodoro.html" class="nav-logo">
+        <img src="/logos_google/tomato.svg" alt="tomate">
+        TDE 2.0
+    </a>
+    <div class="nav-links">
+        <a href="/frontend/teste.html" title="Testes">
+            <img src="/logos_google/book_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Testes">
+        </a>
+        <a href="/pomodoro/pomodoro.html" title="Pomodoro">
+            <img src="/logos_google/home_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Início">
+        </a>
+    </div>
+</nav>
 
-<div class="container">
-    <h1>Conta</h1>
-    <p>Bem-vindo à sua conta!</p>
-    
-</div>
+<main>
+
+    <!-- Perfil -->
+    <div class="perfil-card">
+        <div class="avatar-wrap">
+            <div class="avatar" id="avatarDisplay" onclick="document.getElementById('inputAvatar').click()">
+                🍅
+            </div>
+            <button class="avatar-edit-btn" onclick="document.getElementById('inputAvatar').click()" title="Alterar foto">✏️</button>
+            <input type="file" id="inputAvatar" accept="image/*" onchange="trocarAvatar(event)">
+        </div>
+        <div class="perfil-info">
+            <h2 id="nomeUsuario">Carregando...</h2>
+            <p id="emailUsuario">—</p>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <p class="secao-titulo">📊 Estatísticas</p>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-valor" id="statTotal">—</div>
+            <div class="stat-label">Total estudado</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-valor" id="statSessoes">—</div>
+            <div class="stat-label">Sessões</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-valor" id="statStreak">—</div>
+            <div class="stat-label">Streak atual 🔥</div>
+        </div>
+    </div>
+
+    <!-- Conquistas -->
+    <p class="secao-titulo">🏆 Conquistas</p>
+    <div class="conquistas-grid" id="conquistasGrid">
+        <!-- gerado via JS -->
+    </div>
+
+</main>
+
+<script>
+const API = "http://localhost:8080";
+
+// ── dados do usuário ──
+const nome = sessionStorage.getItem("usuario_nome") || "Estudante";
+const id   = sessionStorage.getItem("usuario_id");
+document.getElementById("nomeUsuario").textContent = nome;
+document.getElementById("emailUsuario").textContent = id ? `ID #${id}` : "Visitante";
+
+// ── avatar salvo ──
+const avatarSalvo = localStorage.getItem("avatarURL");
+if (avatarSalvo) {
+    document.getElementById("avatarDisplay").innerHTML =
+        `<img src="${avatarSalvo}" alt="avatar">`;
+}
+
+function trocarAvatar(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const url = e.target.result;
+        localStorage.setItem("avatarURL", url);
+        document.getElementById("avatarDisplay").innerHTML =
+            `<img src="${url}" alt="avatar">`;
+    };
+    reader.readAsDataURL(file);
+}
+
+// ── conquistas ──
+const CONQUISTAS = [
+    { id: "c25",  emoji: "🌱", nome: "Primeira vez",  req: 25,  label: "25 min" },
+    { id: "c60",  emoji: "📚", nome: "Estudioso",     req: 60,  label: "1 hora" },
+    { id: "c90",  emoji: "🎯", nome: "Focado",        req: 90,  label: "90 min" },
+    { id: "c120", emoji: "⚡", nome: "Super Foco",    req: 120, label: "2 horas" },
+    { id: "c180", emoji: "🔥", nome: "Fora do Normal",req: 180, label: "3 horas" },
+    { id: "c240", emoji: "🚀", nome: "Máquina",       req: 240, label: "4 horas" },
+    { id: "c300", emoji: "🧠", nome: "Mente Afiada",  req: 300, label: "5 horas" },
+    { id: "c360", emoji: "🌟", nome: "Estrela",       req: 360, label: "6 horas" },
+    { id: "c420", emoji: "💎", nome: "Diamante",      req: 420, label: "7 horas" },
+    { id: "c480", emoji: "👑", nome: "Lendário",      req: 480, label: "8 horas" },
+];
+
+let minutosTotal = 0;
+let destaques = JSON.parse(localStorage.getItem("conquistasDestaque") || "[]");
+
+function renderConquistas(minutos) {
+    const grid = document.getElementById("conquistasGrid");
+    grid.innerHTML = "";
+    CONQUISTAS.forEach(c => {
+        const desbloqueada = minutos >= c.req;
+        const emDestaque   = destaques.includes(c.id);
+        const div = document.createElement("div");
+        div.className = `conquista-card${desbloqueada ? "" : " bloqueada"}${emDestaque ? " destaque" : ""}`;
+        div.innerHTML = `
+            <span class="emoji">${desbloqueada ? c.emoji : "🔒"}</span>
+            <div class="nome">${c.nome}</div>
+            <div class="req">${c.label} de estudo</div>
+            ${desbloqueada ? `<button class="btn-destaque${emDestaque ? " ativo" : ""}" onclick="toggleDestaque('${c.id}', this)">${emDestaque ? "★ Destaque" : "☆ Destacar"}</button>` : ""}
+        `;
+        grid.appendChild(div);
+    });
+}
+
+function toggleDestaque(id, btn) {
+    const idx = destaques.indexOf(id);
+    if (idx === -1) {
+        if (destaques.length >= 3) {
+            // remove o mais antigo
+            destaques.shift();
+        }
+        destaques.push(id);
+    } else {
+        destaques.splice(idx, 1);
+    }
+    localStorage.setItem("conquistasDestaque", JSON.stringify(destaques));
+    renderConquistas(minutosTotal);
+}
+
+// ── streak ──
+function calcularStreak() {
+    const dias = JSON.parse(localStorage.getItem("diasEstudados") || "[]");
+    let streak = 0;
+    const d = new Date();
+    while (true) {
+        const key = d.toISOString().slice(0, 10);
+        if (dias.includes(key)) {
+            streak++;
+            d.setDate(d.getDate() - 1);
+        } else break;
+    }
+    return streak;
+}
+
+document.getElementById("statStreak").textContent = calcularStreak() + " dias";
+
+// ── carregar do backend ──
+async function carregarStats() {
+    if (!id) {
+        renderConquistas(0);
+        return;
+    }
+    try {
+        const res  = await fetch(`${API}/tempo_total?usuario_id=${id}`);
+        const data = await res.json();
+        if (data.ok) {
+            const h = Math.floor(data.total_seg / 3600);
+            const m = Math.floor((data.total_seg % 3600) / 60);
+            minutosTotal = Math.floor(data.total_seg / 60);
+            document.getElementById("statTotal").textContent = `${h}h ${m}m`;
+            document.getElementById("statSessoes").textContent = data.sessoes;
+        }
+    } catch { /* offline */ }
+    renderConquistas(minutosTotal);
+}
+
+carregarStats();
+</script>
+
 </body>
 </html>
