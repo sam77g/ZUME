@@ -278,6 +278,7 @@ Para proteger informações sensíveis:
 
 ## Autores
 Samuel Santana
+
 Projeto desenvolvido como Trabalho de Discente Efetivo (TDE) da disciplina de Introdução à Linguagem de Programação.
 
 ---
