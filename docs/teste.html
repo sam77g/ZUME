@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDE 2.0 — Testes & Resumos</title>
+    <link rel="icon" href="/assets/path58.png" type="image/png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <script>
+    MathJax = {
+        tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+        startup: { typeset: false }
+    };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --verde-main:   #49BA65;
+    --verde-escuro: #287B4D;
+    --verde-deep:   rgb(0, 100, 32);
+    --verde-claro:  #E2FFDF;
+    --sombra: rgba(5, 27, 11, 0.3);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--verde-claro);
+    font-family: "MuseoModerno", sans-serif;
+    color: #1a1a1a;
+    min-height: 100vh;
+}
+
+/* ── navbar ── */
+/* ── navbar ── */
+.navbar {
+    width: 100%;
+    background: var(--verde-deep);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: white;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+.nav-logo img { width: 26px; height: 26px; }
+.nav-links { display: flex; gap: 6px; }
+.nav-links a {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    background: rgba(255,255,255,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+}
+.nav-links a:hover {
+    background: rgba(255,255,255,0.25);
+    transform: scale(1.06);
+}
+.nav-links a.active { background: rgba(255,255,255,0.25); }
+.nav-links img { width: 20px; height: 20px; }
+
+/* ── container principal ── */
+.main-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+header { margin-bottom: 32px; text-align: center; }
+header h1 { font-size: 28px; color: var(--verde-deep); margin-bottom: 8px; }
+header p { color: #555; font-size: 15px; }
+
+
+
+/* ── área de upload e input ── */
+.upload-box {
+    background: #fff;
+    border: 2px dashed var(--verde-main);
+    border-radius: 16px;
+    padding: 32px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+}
+.upload-box:hover, .upload-box.drag-over { background: rgba(73,186,101,0.08); }
+.upload-icon { font-size: 48px; margin-bottom: 12px; display: block; }
+.upload-box p { font-size: 15px; color: #444; }
+.upload-box span { font-size: 13px; color: #888; display: block; margin-top: 6px; }
+
+/* badge do tipo de arquivo */
+.file-badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--verde-claro);
+    color: var(--verde-escuro);
+    border: 1px solid var(--verde-main);
+}
+
+/* Caixa de Texto */
+.text-zone {
+    margin-top: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.text-zone label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--verde-escuro);
+}
+.text-zone textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    font-family: inherit;
+    resize: vertical;
+}
+.text-zone textarea:focus {
+    outline: none;
+    border-color: var(--verde-main);
+}
+
+.actions { display: flex; gap: 16px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.2s;
+}
+button:active { transform: scale(0.98); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--verde-main); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--verde-escuro); }
+.btn-secondary { background: #fff; color: var(--verde-escuro); border: 2px solid var(--verde-main); }
+.btn-secondary:hover:not(:disabled) { background: rgba(73,186,101,0.05); }
+
+/* ── resultado ── */
+.result-placeholder {
+    text-align: center;
+    padding: 40px;
+    color: #777;
+    font-style: italic;
+    background: rgba(255,255,255,0.5);
+    border-radius: 16px;
+    margin-top: 32px;
+}
+.result-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    margin-top: 32px;
+    display: none;
+}
+.result-card h2 { font-size: 20px; color: var(--verde-deep); margin-bottom: 16px; border-bottom: 2px solid var(--verde-claro); padding-bottom: 8px; }
+.result-text {
+    font-size: 14px;
+    line-height: 1.7;
+    font-family: sans-serif;
+    color: #333;
+}
+.result-text h1,.result-text h2,.result-text h3 { color: var(--verde-escuro); margin-top: 1em; }
+.result-text ul,.result-text ol { padding-left: 1.4em; }
+.result-text li { margin-bottom: 4px; }
+.result-text strong { color: #1a1a1a; }
+.result-text code { background: #f0f0f0; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+.result-text table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+.result-text th,.result-text td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; }
+.result-text th { background: #e8f5e9; }
+
+/* spinner */
+.spinner {
+    display: none;
+    margin: 20px auto;
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(73,186,101,0.2);
+    border-top-color: var(--verde-main);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* aviso de erro inline */
+.aviso-erro {
+    background: #fde8e8;
+    border: 1px solid #e74c3c;
+    color: #c0392b;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    margin-top: 16px;
+    display: none;
+}
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/pomodoro/pomodoro.html" class="nav-logo">
+        <img src="/assets/path58.png" alt="Logo">
+        ZUME
+    </a>
+    <div class="nav-links">
+        <a href="/pomodoro/pomodoro.html" title="Timer">
+            <img src="/logos_google/home_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Timer">
+        </a>
+        <a href="teste.html" title="Materiais" class="active">
+            <img src="/logos_google/book_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Materiais">
+        </a>
+        <a href="conta.html" title="Conta">
+            <img src="/logos_google/person_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Conta">
+        </a>
+    </div>
+</nav>
+
+<div class="main-container">
+    <header>
+        <h1>Gerador de Conteúdo com IA</h1>
+        <p>Crie resumos práticos ou roteiros de estudo eficientes a partir dos seus materiais.</p>
+    </header>
+
+    <!-- Upload de arquivo -->
+    <div class="upload-box" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <span class="upload-icon">📁</span>
+        <p id="uploadStatus">Arraste um arquivo (.txt ou .pdf) aqui ou clique para procurar</p>
+        <span>Suporta arquivos de texto e PDF</span>
+        <span id="fileBadge"></span>
+        <input type="file" id="fileInput" accept=".txt,.pdf" style="display:none" onchange="selecionarArquivo(event)">
+    </div>
+
+    <div class="aviso-erro" id="avisoErro"></div>
+
+    <div class="text-zone">
+        <label for="textoDigitado">Ou digite/cole seu texto aqui:</label>
+        <textarea id="textoDigitado" rows="6" placeholder="Insira o texto que deseja que a IA processe..."></textarea>
+    </div>
+
+    <div class="actions">
+        <button class="btn-primary" id="btnResumo" onclick="gerarResumo()">📋 Gerar Resumo</button>
+        <button class="btn-secondary" id="btnRoteiro" onclick="gerarRoteiro()">🗺️ Criar Roteiro de Estudo</button>
+    </div>
+
+    <div id="placeholderResultado" class="result-placeholder">
+        Seu material gerado aparecerá aqui...
+    </div>
+
+    <div id="spinner" class="spinner"></div>
+
+    <div id="resultadoCard" class="result-card">
+        <h2 id="resultadoTitulo">Resultado</h2>
+        <div id="resultadoTexto" class="result-text"></div>
+    </div>
+</div>
+
+<script>
+// ── Configura worker do pdf.js ──────────────────────────────────────────
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+let arquivoSelecionado = null;
+
+
+// ── Drag & Drop ────────────────────────────────────────────────────────
+const drop = document.getElementById('dropZone');
+drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag-over'); });
+drop.addEventListener('dragleave', () => drop.classList.remove('drag-over'));
+drop.addEventListener('drop', e => {
+    e.preventDefault();
+    drop.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) processarArquivo(file);
+});
+
+function selecionarArquivo(event) {
+    const file = event.target.files[0];
+    if (file) processarArquivo(file);
+}
+
+function processarArquivo(file) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!['txt', 'pdf'].includes(ext)) {
+        mostrarErro('Tipo de arquivo não suportado. Use .txt ou .pdf');
+        return;
+    }
+    arquivoSelecionado = file;
+    const icone = ext === 'pdf' ? '📄' : '📝';
+    document.getElementById('uploadStatus').textContent = `${icone} Arquivo pronto: ${file.name}`;
+    document.getElementById('fileBadge').innerHTML =
+        `<span class="file-badge">${ext.toUpperCase()} — ${(file.size / 1024).toFixed(1)} KB</span>`;
+    esconderErro();
+}
+
+// ── Extração de texto ──────────────────────────────────────────────────
+function obterTextoMaterial() {
+    return new Promise((resolve, reject) => {
+        const textoCaixa = document.getElementById('textoDigitado').value.trim();
+        if (textoCaixa.length > 0) { resolve(textoCaixa); return; }
+        if (!arquivoSelecionado) { resolve(''); return; }
+
+        const ext = arquivoSelecionado.name.split('.').pop().toLowerCase();
+
+        if (ext === 'txt') {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result.substring(0, 4000));
+            reader.onerror = () => reject(new Error('Falha ao ler arquivo .txt'));
+            reader.readAsText(arquivoSelecionado, 'UTF-8');
+        } else if (ext === 'pdf') {
+            extrairTextoPDF(arquivoSelecionado).then(resolve).catch(reject);
+        }
+    });
+}
+
+async function extrairTextoPDF(file) {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let textoTotal = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const textoDaPagina = content.items.map(item => item.str).join(' ');
+        textoTotal += `\n--- Página ${i} ---\n${textoDaPagina}`;
+        if (textoTotal.length > 4000) break;
+    }
+    return textoTotal.trim().substring(0, 4000);
+}
+
+// ── Proteção de fórmulas antes do marked.parse ────────────────────────
+// Evita que marked quebre $...$, $$...$$, \(...\) e \[...\]
+function renderMd(text) {
+    const slots = [];
+    const hold = (m) => { slots.push(m); return `\x00MATH${slots.length - 1}\x00`; };
+
+    let t = text
+        .replace(/\$\$[\s\S]+?\$\$/g, hold)    // bloco $$...$$
+        .replace(/\\\[[\s\S]+?\\\]/g, hold)    // bloco \[...\]
+        .replace(/\\\(.+?\\\)/g, hold)         // inline \(...\)
+        .replace(/\$[^\$\n]+?\$/g, hold);      // inline $...$
+
+    let html = marked.parse(t);
+
+    // Restaura as fórmulas protegidas
+    slots.forEach((orig, i) => {
+        html = html.replaceAll(`\x00MATH${i}\x00`, orig);
+    });
+
+    return html;
+}
+
+// ── Chamada direta à API Groq ──────────────────────────────────────────
+async function chamarIA(tipoAcao, tituloContainer) {
+    esconderErro();
+
+    const apiKey = GROQ_API_KEY;
+    if (!apiKey || !apiKey.startsWith('gsk_')) {
+        mostrarErro('Chave Groq não configurada. Edite a constante GROQ_API_KEY no código.');
+        return;
+    }
+
+    let textoMaterial;
+    try {
+        textoMaterial = await obterTextoMaterial();
+    } catch (err) {
+        mostrarErro('Erro ao ler o arquivo: ' + err.message);
+        return;
+    }
+
+    if (!textoMaterial) {
+        mostrarErro('Escreva algo, carregue um arquivo .txt ou .pdf primeiro!');
+        return;
+    }
+
+    // Prompts curtos para economizar tokens de entrada
+    const prompts = {
+        resumo:  `Resumo completo em pt-BR com títulos, subtítulos e bullets. Destaque conceitos-chave. Use LaTeX para fórmulas ($...$ ou $$...$$).\n\n${textoMaterial}`,
+        roteiro: `Roteiro de estudo em pt-BR: etapas progressivas, tempo estimado por parte, dicas de fixação. Use LaTeX para fórmulas ($...$ ou $$...$$).\n\n${textoMaterial}`
+    };
+
+    setBotoes(false);
+    document.getElementById('placeholderResultado').style.display = 'none';
+    document.getElementById('resultadoCard').style.display = 'none';
+    document.getElementById('spinner').style.display = 'block';
+
+    try {
+        const res = await fetch('http://localhost:8080/ia', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'llama-3.3-70b-versatile',  // modelo válido no Groq free tier
+                max_tokens: 4096,                   // espaço suficiente sem estouro
+                messages: [
+                    { role: 'user', content: prompts[tipoAcao] }
+                ]
+            })
+        });
+
+        const data = await res.json();
+        document.getElementById('spinner').style.display = 'none';
+
+        if (!res.ok) {
+            const msg = data?.error?.message || `Erro HTTP ${res.status}`;
+            if (res.status === 401) {
+                mostrarErro('Chave inválida ou expirada. Gere uma nova em console.groq.com');
+            } else {
+                mostrarErro('Erro da API Groq: ' + msg);
+            }
+            document.getElementById('placeholderResultado').style.display = 'block';
+            return;
+        }
+
+        const textoIA = data?.choices?.[0]?.message?.content;
+        if (!textoIA) {
+            mostrarErro('Resposta inesperada da API. Tente novamente.');
+            return;
+        }
+
+        const el = document.getElementById('resultadoTexto');
+        document.getElementById('resultadoCard').style.display = 'block';
+        document.getElementById('resultadoTitulo').textContent = tituloContainer;
+        el.innerHTML = renderMd(textoIA);           // usa renderMd com proteção de fórmulas
+        MathJax.typesetPromise([el]);               // renderiza LaTeX
+
+    } catch (err) {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('placeholderResultado').style.display = 'block';
+        mostrarErro('Erro de rede ao contatar a API Groq. Verifique sua conexão.');
+        console.error(err);
+    } finally {
+        setBotoes(true);
+    }
+}
+
+function gerarResumo()  { chamarIA('resumo',  '📋 Resumo Gerado'); }
+function gerarRoteiro() { chamarIA('roteiro', '🗺️ Roteiro de Estudo'); }
+
+function setBotoes(ativo) {
+    document.getElementById('btnResumo').disabled  = !ativo;
+    document.getElementById('btnRoteiro').disabled = !ativo;
+}
+
+function mostrarErro(msg) {
+    const el = document.getElementById('avisoErro');
+    el.textContent = '⚠️ ' + msg;
+    el.style.display = 'block';
+}
+function esconderErro() {
+    document.getElementById('avisoErro').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

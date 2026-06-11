@@ -1,0 +1,270 @@
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* ── variáveis ─────────────────────────────────── */
+:root {
+  --verde-main:   #49BA65;
+  --verde-escuro: #287B4D;
+  --verde-deep:   rgb(0, 100, 32);
+  --verde-claro:  #E2FFDF;
+  --branco:       #ffffff;
+  --texto-dark:   #16453f;
+  --cinza-borda:  #e0e0e0;
+  --cinza-texto:  #999;
+  --sombra:       rgba(5, 27, 11, 0.35);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: "MuseoModerno", sans-serif;
+
+  background: linear-gradient(-45deg, #52eee4, #abe73c, #08743e, #23d5a5);
+  background-size: 400% 400%;
+  animation: gradiente 14s ease infinite;
+}
+
+@keyframes gradiente {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── container principal ────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 880px;
+  min-height: 460px;
+  display: flex;
+  background: #004d10;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+/* ── lado esquerdo ──────────────────────────────── */
+.left {
+  width: 38%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 36px 28px;
+  text-align: center;
+  background: linear-gradient(180deg, #005407 0%, #003a0a 100%);
+}
+
+.icone img {
+  width: 88px;
+  height: 88px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+}
+
+.left h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  line-height: 1.1;
+}
+
+.left p {
+  font-size: 12.5px;
+  opacity: 0.6;
+  margin-top: -4px;
+}
+
+.btn-nav {
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid rgba(255,255,255,0.22);
+  border-radius: 12px;
+  background: transparent;
+  color: white;
+  font-family: "MuseoModerno", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: background 0.22s, border-color 0.22s, transform 0.15s;
+}
+
+.btn-nav:hover {
+  background: rgba(122, 255, 65, 0.14);
+  border-color: rgba(73, 186, 101, 0.55);
+  transform: translateY(-1px);
+}
+
+.btn-nav.ativo {
+  background: rgba(122, 255, 65, 0.22);
+  border-color: rgba(73, 186, 101, 0.7);
+}
+
+/* ── lado direito ───────────────────────────────── */
+.right {
+  width: 62%;
+  background: var(--branco);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* decoração de fundo sutil */
+.right::before {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(73,186,101,0.08) 0%, transparent 70%);
+  top: -60px;
+  right: -60px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ── boas-vindas ────────────────────────────────── */
+.boas-vindas {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 28px;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.boas-vindas .icone { font-size: 42px; margin-bottom: 4px; }
+
+.boas-vindas h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--texto-dark);
+}
+
+.boas-vindas span {
+  font-size: 13px;
+  color: var(--cinza-texto);
+  max-width: 220px;
+  line-height: 1.5;
+}
+
+.boas-vindas.oculto {
+  opacity: 0;
+  transform: translateY(-14px);
+  pointer-events: none;
+}
+
+/* ── formulários ────────────────────────────────── */
+.formulario {
+  position: absolute;
+  width: 82%;
+  opacity: 0;
+  transform: translateX(22px);
+  pointer-events: none;
+  transition: opacity 0.38s ease, transform 0.38s ease;
+}
+
+.formulario.ativo {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+
+.formulario h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--texto-dark);
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+input {
+  padding: 13px 15px;
+  border-radius: 11px;
+  border: 1.5px solid var(--cinza-borda);
+  font-family: "MuseoModerno", sans-serif;
+  font-size: 13px;
+  outline: none;
+  color: #222;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fafafa;
+}
+
+input:focus {
+  border-color: var(--verde-main);
+  box-shadow: 0 0 0 3px rgba(73, 186, 101, 0.15);
+  background: white;
+}
+
+input::placeholder { color: #c5c5c5; }
+
+button {
+  padding: 13px;
+  border: none;
+  border-radius: 11px;
+  background: var(--verde-deep);
+  color: white;
+  font-family: "MuseoModerno", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+button:hover {
+  background: #004f00;
+  transform: translateY(-1px);
+}
+
+button:active { transform: translateY(0); }
+
+.link-alt {
+  font-size: 12px;
+  color: var(--verde-escuro);
+  text-align: center;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-top: 2px;
+  transition: color 0.2s;
+}
+
+.link-alt:hover { color: var(--verde-deep); }
+
+/* ── feedback ────────────────────────────────────── */
+.msg-feedback {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 2px;
+  min-height: 18px;
+}
+
+/* ── responsivo ──────────────────────────────────── */
+@media (max-width: 620px) {
+  .container {
+    flex-direction: column;
+    min-height: unset;
+  }
+  .left  { width: 100%; padding: 28px 24px 20px; }
+  .right { width: 100%; min-height: 360px; }
+  .formulario { width: 88%; }
+}
