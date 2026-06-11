@@ -140,6 +140,17 @@ tde2.0/
 
 ## Como Executar o Projeto
 
+### É necessário seguir os seguintes passos para rodar localmente :
+```
+sudo apt update
+
+sudo apt install \
+gcc \
+make \
+libsqlite3-dev \
+libmicrohttpd-dev \
+libssl-dev
+
 ### 1. Clonar o Repositório
 
 ```bash
@@ -184,6 +195,8 @@ frontend/login.html
 ou utilize um servidor local para servir os arquivos da aplicação.
 
 ---
+
+
 
 ## Funcionalidades Futuras
 
