@@ -18,3 +18,10 @@ Thumbs.db
 
 server
 *.out
+
+*.db
+
+*.zip
+
+server
+*.out
