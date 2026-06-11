@@ -3,56 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login / Cadastro</title>
+  <title>TDE 2.0 — Entrar</title>
   <link rel="stylesheet" href="style02.css">
   <link rel="icon" href="/assets/path58.png" type="image/png">
 </head>
 <body>
- 
+
 <div class="container">
- 
+
+  <!-- Lado esquerdo -->
   <div class="left">
-    <h1>Bem-vindo</h1>
-    <p id="subtitulo">Escolha uma opção abaixo</p>
+    <div class="icone">
+      <img src="/assets/path58.png" alt="NAME">
+    </div>
+    <h1>ZUME</h1>
+    <p>Estude com foco, conquiste mais</p>
     <button class="btn-nav" id="btnLogin">ENTRAR</button>
     <button class="btn-nav" id="btnCadastro">CRIAR CONTA</button>
   </div>
- 
+
+  <!-- Lado direito -->
   <div class="right">
- 
+
+    <!-- Boas-vindas -->
     <div class="boas-vindas" id="boasVindas">
-      <div class="icone">
-        <img src="/logos_google/tomato.svg" alt="tomato">
-    </div>
+      <div class="icone">🍅</div>
       <h2>Olá!</h2>
       <span>Selecione uma opção ao lado para continuar.</span>
     </div>
- 
+
+    <!-- Form login -->
     <div class="formulario" id="loginForm">
       <h2>Entrar</h2>
       <form>
         <input type="email" id="email" placeholder="E-mail">
         <input type="password" id="senhaLogin" placeholder="Senha">
-        <button type="button" id="btnEntrar" >ENTRAR</button>
+        <button type="button" id="btnEntrar">ENTRAR</button>
         <p class="link-alt" id="irCadastro">Não tem conta? Cadastre-se</p>
       </form>
     </div>
- 
+
+    <!-- Form cadastro -->
     <div class="formulario" id="cadastroForm">
       <h2>Criar conta</h2>
       <form>
-        <input type="text" id="nomeUsuario" placeholder="Nome de usuário">
-        <input type="email" id="emailcadastro" placeholder="E-mail">
-        <input type="password" id="senha" placeholder="Senha">
+        <input type="text"     id="nomeUsuario"   placeholder="Nome de usuário">
+        <input type="email"    id="emailcadastro" placeholder="E-mail">
+        <input type="password" id="senha"         placeholder="Senha">
         <button type="button" id="btnCadastrar">CADASTRAR</button>
         <p class="link-alt" id="irLogin">Já tem conta? Entre aqui</p>
       </form>
     </div>
- 
+
   </div>
 </div>
- 
+
 <script src="script02.js"></script>
 </body>
 </html>
- 
