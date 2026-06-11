@@ -13,5 +13,8 @@ server
 .DS_Store
 Thumbs.db
 
-backend/pomodoro.db
-backend/server
+.env
+.env.*
+
+server
+*.out
