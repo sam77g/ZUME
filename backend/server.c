@@ -10,8 +10,6 @@
 #include <sqlite3.h>
 #include <openssl/sha.h>
 #include <curl/curl.h>
-
-const char *groq_key = getenv("GROQ_API_KEY");
 #define PORT        8080
 #define DB_FILE     "pomodoro.db"
 #define MAX_BODY    524288
@@ -97,6 +95,24 @@ static char *rota_groq_ia(const char *body) {
     struct CurlResponse chunk = { .data = malloc(1), .size = 0 };
     struct curl_slist *headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
+
+    const char *groq_key = getenv("GROQ_API_KEY");
+
+if (!groq_key) {
+    curl_easy_cleanup(curl);
+    curl_slist_free_all(headers);
+    return strdup("{\"ok\":false,\"msg\":\"GROQ_API_KEY nao definida\"}");
+}
+
+char auth_header[512];
+snprintf(
+    auth_header,
+    sizeof(auth_header),
+    "Authorization: Bearer %s",
+    groq_key
+);
+
+headers = curl_slist_append(headers, auth_header);
     
     // Configura a sua nova chave limpa sem as chaves {} que vieram no texto
 

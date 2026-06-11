@@ -412,7 +412,7 @@ async function chamarIA(tipoAcao, tituloContainer) {
     document.getElementById('spinner').style.display = 'block';
 
     try {
-        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const res = await fetch('http://localhost:8080/ia', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
