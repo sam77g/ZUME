@@ -12,3 +12,6 @@ server
 # Linux
 .DS_Store
 Thumbs.db
+
+backend/pomodoro.db
+backend/server
