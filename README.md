@@ -2,72 +2,74 @@
 
 ## Sobre o Projeto
 
-O **ZUME** é uma plataforma web desenvolvida como Trabalho de Discente Efetivo da disciplina de **Introdução à Linguagem de Programação**.
+O **ZUME** é uma plataforma web desenvolvida como Trabalho de Discente Efetivo (TDE) da disciplina de **Introdução à Linguagem de Programação**.
 
-O sistema foi criado com o objetivo de auxiliar estudantes na organização dos estudos, utilizando técnicas de produtividade e ferramentas de aprendizado ativo. A plataforma reúne funcionalidades como cronômetro Pomodoro, gerenciamento de metas, autenticação de usuários, geração de materiais de estudo e integração com Inteligência Artificial.
+O projeto tem como objetivo auxiliar estudantes na organização dos estudos, promovendo foco, produtividade e aprendizado ativo por meio de ferramentas integradas em um único ambiente.
+
+A plataforma reúne funcionalidades como gerenciamento de sessões Pomodoro, metas de estudo, autenticação de usuários, processamento de materiais didáticos e integração com Inteligência Artificial para geração de conteúdo educacional.
 
 ---
 
 ## Objetivos
 
-* Melhorar a produtividade durante os estudos.
-* Auxiliar na organização do tempo.
-* Incentivar o aprendizado ativo através de resumos e testes.
-* Centralizar ferramentas úteis para estudantes em uma única plataforma.
+- Melhorar a produtividade durante os estudos.
+- Auxiliar na gestão eficiente do tempo.
+- Incentivar técnicas de aprendizagem ativa.
+- Centralizar ferramentas acadêmicas em uma única plataforma.
+- Explorar conceitos de desenvolvimento Full Stack utilizando linguagem C no backend.
 
 ---
 
 ## Funcionalidades
 
-### Sistema de Cadastro e Login
+### Autenticação de Usuários
 
-* Cadastro de novos usuários.
-* Login utilizando e-mail e senha.
-* Armazenamento seguro das credenciais.
-* Persistência de dados utilizando banco de dados SQLite.
+- Cadastro de novos usuários.
+- Login com e-mail e senha.
+- Persistência de dados utilizando SQLite.
+- Gerenciamento de contas.
 
 ### Pomodoro Inteligente
 
-* Cronômetro Pomodoro para sessões de estudo.
-* Modos de foco pré-configurados:
+- Cronômetro Pomodoro integrado.
+- Modos de estudo pré-configurados:
+  - 25 minutos (Pomodoro clássico)
+  - 30 minutos
+  - 50 minutos
+  - 60 minutos
+- Iniciar, pausar e reiniciar sessões.
+- Barra de progresso em tempo real.
+- Alerta sonoro ao término da sessão.
 
-  * 25 minutos de estudo
-  * 30 minutos de estudo
-  * 50 minutos de foco
-  * 60 minutos de foco total
-* Controle de início, pausa e reinício.
-* Alarme sonoro ao final das sessões.
-* Barra de progresso em tempo real.
+### Metas e Produtividade
 
-### Sistema de Metas
-
-* Controle de pomodoros concluídos no dia.
-* Controle de minutos estudados.
-* Metas diárias de produtividade.
-* Sistema de sequência de estudos (streak).
+- Controle de pomodoros concluídos.
+- Registro de minutos estudados.
+- Metas diárias de produtividade.
+- Sistema de sequência de estudos (streak).
 
 ### Ferramentas de Estudo
 
-* Upload de arquivos para análise.
-* Área para inserção de textos e anotações.
-* Geração de conteúdo para revisão.
-* Suporte a fórmulas matemáticas utilizando MathJax.
+- Upload de arquivos para análise.
+- Campo para inserção de textos e anotações.
+- Geração de materiais de apoio.
+- Suporte à renderização de fórmulas matemáticas com MathJax.
 
-### Inteligência Artificial
+### Integração com Inteligência Artificial
 
-* Estrutura preparada para integração com IA.
-* Possibilidade de geração automática de:
-
-  * Resumos
-  * Questões
-  * Materiais de revisão
-  * Conteúdo educacional personalizado
+- Geração automática de resumos.
+- Criação de roteiros de estudo.
+- Estrutura preparada para futuras funcionalidades:
+  - Flashcards automáticos;
+  - Questões de revisão;
+  - Conteúdo personalizado;
+  - Recomendações de estudo.
 
 ### Interface Responsiva
 
-* Design moderno voltado para estudantes.
-* Navegação intuitiva.
-* Compatibilidade com computadores e dispositivos móveis.
+- Design moderno e intuitivo.
+- Compatibilidade com computadores e dispositivos móveis.
+- Navegação simplificada para estudantes.
 
 ---
 
@@ -75,36 +77,37 @@ O sistema foi criado com o objetivo de auxiliar estudantes na organização dos 
 
 ### Frontend
 
-* HTML5
-* CSS3
-* JavaScript (ES6+)
+- HTML5
+- CSS3
+- JavaScript (ES6+)
 
 ### Bibliotecas Frontend
 
-* PDF.js
-* Marked.js
-* MathJax
-* Web Audio API
+- PDF.js
+- Marked.js
+- MathJax
+- Web Audio API
 
 ### Backend
 
-* Linguagem C
-* GNU Make
+- Linguagem C
+- GNU Make
 
 ### Banco de Dados
 
-* SQLite3
+- SQLite3
 
-### APIs e Bibliotecas do Backend
+### Bibliotecas do Backend
 
-* libmicrohttpd
-* libcurl
-* OpenSSL
+- libmicrohttpd
+- libcurl
+- OpenSSL
+- pthread
 
 ### Controle de Versão
 
-* Git
-* GitHub
+- Git
+- GitHub
 
 ---
 
@@ -115,8 +118,7 @@ tde2.0/
 │
 ├── backend/
 │   ├── server.c
-│   ├── Makefile
-│   └── pomodoro.db
+│   └── Makefile
 │
 ├── frontend/
 │   ├── login.html
@@ -133,47 +135,92 @@ tde2.0/
 ├── assets/
 ├── logos_google/
 ├── fonts_google/
+├── .env.example
+├── .gitignore
 └── README.md
 ```
 
 ---
 
-## Como Executar o Projeto
+## Requisitos
 
-### É necessário seguir os seguintes passos para rodar localmente :
-```
+### Linux (Ubuntu/Debian)
+
+Instale as dependências necessárias:
+
+```bash
 sudo apt update
 
 sudo apt install \
 gcc \
 make \
+sqlite3 \
 libsqlite3-dev \
 libmicrohttpd-dev \
+libcurl4-openssl-dev \
 libssl-dev
 ```
+
+---
+
+## Instalação
 
 ### 1. Clonar o Repositório
 
 ```bash
-git clone <url-do-repositorio>
+git clone <URL_DO_REPOSITORIO>
 cd tde2.0
 ```
 
-### 2. Compilar o Backend
+### 2. Configurar Variáveis de Ambiente
+
+Crie o arquivo `.env` a partir do modelo:
+
+```bash
+cp .env.example .env
+```
+
+Edite o arquivo e informe sua chave da API:
+
+```env
+GROQ_API_KEY=SUA_CHAVE_AQUI
+```
+
+> Importante: nunca envie seu arquivo `.env` para o GitHub.
+
+---
+
+## Compilação
+
+Entre na pasta do backend:
 
 ```bash
 cd backend
-
-gcc server.c -o server \
--lsqlite3 \
--lmicrohttpd \
--lpthread \
--lssl \
--lcrypto \
--lcurl
 ```
 
-### 3. Executar o Servidor
+Compile o servidor:
+
+```bash
+make
+```
+
+Isso gerará o executável:
+
+```text
+server
+```
+
+---
+
+## Execução
+
+Defina a variável de ambiente da API (caso não utilize um carregador de `.env`):
+
+```bash
+export GROQ_API_KEY="SUA_CHAVE"
+```
+
+Execute o servidor:
 
 ```bash
 ./server
@@ -185,35 +232,53 @@ O backend ficará disponível em:
 http://localhost:8080
 ```
 
-### 4. Abrir o Frontend
+---
 
-Abra o arquivo:
+## Utilização do Frontend
 
-```text
-frontend/login.html
+Abra os arquivos do frontend em um navegador ou utilize um servidor local.
+
+Exemplo utilizando Python:
+
+```bash
+cd frontend
+python3 -m http.server 5500
 ```
 
-ou utilize um servidor local para servir os arquivos da aplicação.
+Depois acesse:
+
+```text
+http://localhost:5500
+```
 
 ---
 
+## Segurança
 
+Para proteger informações sensíveis:
+
+- O arquivo `.env` não é versionado.
+- Chaves de API não devem ser armazenadas diretamente no código-fonte.
+- Bancos de dados locais não são distribuídos no repositório.
+- Arquivos binários compilados são ignorados pelo Git.
+
+---
 
 ## Funcionalidades Futuras
 
-* Flashcards inteligentes.
-* Histórico completo de estudos.
-* Dashboard com estatísticas avançadas.
-* Recomendações personalizadas por IA.
-* Sistema de ranking e gamificação.
-* Aplicativo mobile.
-* Armazenamento em nuvem.
+- Flashcards inteligentes.
+- Dashboard avançado de produtividade.
+- Estatísticas detalhadas de desempenho.
+- Recomendações personalizadas por IA.
+- Sistema de gamificação.
+- Aplicativo mobile.
+- Sincronização em nuvem.
 
 ---
 
 ## Autores
 
-Projeto desenvolvido como Trabalho de Discente Efetivo da disciplina de Introdução à Linguagem de Programação.
+Projeto desenvolvido como Trabalho de Discente Efetivo (TDE) da disciplina de Introdução à Linguagem de Programação.
 
 ---
 
