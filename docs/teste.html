@@ -291,7 +291,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 let arquivoSelecionado = null;
 
 // ── Chave Groq (hardcoded) ─────────────────────────────────────────────
-const GROQ_API_KEY = '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';
+const API = "https://zume-fawu.onrender.com";
 
 // ── Drag & Drop ────────────────────────────────────────────────────────
 const drop = document.getElementById('dropZone');
@@ -383,11 +383,7 @@ function renderMd(text) {
 async function chamarIA(tipoAcao, tituloContainer) {
     esconderErro();
 
-    const apiKey = GROQ_API_KEY;
-    if (!apiKey || !apiKey.startsWith('gsk_')) {
-        mostrarErro('Chave Groq não configurada. Edite a constante GROQ_API_KEY no código.');
-        return;
-    }
+
 
     let textoMaterial;
     try {
@@ -414,11 +410,11 @@ async function chamarIA(tipoAcao, tituloContainer) {
     document.getElementById('spinner').style.display = 'block';
 
     try {
-        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const res = await fetch(`${API}/ia`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
+                
             },
             body: JSON.stringify({
                 model: 'llama-3.3-70b-versatile',  // modelo válido no Groq free tier
