@@ -1,6 +1,6 @@
 /* script02.js — conecta base.html ao servidor C */
 
-const API = "http://localhost:8080";
+const API = "https://zume-fawu.onrender.com";
 
 /* ─── navegação entre formulários ─────────────────────────── */
 
