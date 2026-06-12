@@ -7,9 +7,9 @@ O **ZUME** é uma plataforma web desenvolvida como Trabalho de Discente Efetivo 
 O projeto tem como objetivo auxiliar estudantes na organização dos estudos, promovendo foco, produtividade e aprendizado ativo por meio de ferramentas integradas em um único ambiente.
 
 A plataforma reúne funcionalidades como gerenciamento de sessões Pomodoro, metas de estudo, autenticação de usuários, processamento de materiais didáticos e integração com Inteligência Artificial para geração de conteúdo educacional.
-
-Esse projeto tem fins educacionais e os dados estão salvos em um servidor compartilhado (Render/SQLite).
+Projeto é para fins educacionais e os dados estão salvos em um servidor compartilhado (Render/SQLite).
 Para sua segurança, não utilize a mesma senha do seu e-mail institucional ou de sistemas bancários.
+
 ---
 
 ## Objetivos
