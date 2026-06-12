@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro — TDE 2.0</title>
+    <link rel="stylesheet" href="pomodoro.css">
+    <link rel="icon" href="/assets/path58.png" type="image/png">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/pomodoro/pomodoro.html" class="nav-logo">
+            <img src="/assets/path58.png" alt="NAME">
+            ZUME
+        </a>
+        <div class="nav-links">
+            <a href="/frontend/conta.html" title="Conta">
+                <img src="/logos_google/person_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Conta">
+            </a>
+            <a href="/frontend/teste.html" title="Testes">
+                <img src="/logos_google/book_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Testes">
+            </a>
+        </div>
+    </nav>
+
+    <!-- Card principal -->
+    <div class="container">
+
+        <!-- badge que muda entre "foco" e "pausa" -->
+        <span class="badge-modo" id="badgeModo">🍅 FOCO</span>
+
+        <!-- seletor de modo -->
+        <div class="modo-wrap">
+            <label for="modoSelect">Modo de estudo</label>
+            <select id="modoSelect" onchange="mudarModo(this.value)">
+                <option value="padrao">Padrão — 25min estudo / 5min pausa</option>
+                <option value="pausaCurta">Pausa curta — 30min / 5min</option>
+                <option value="pausaLonga">Pausa longa — 30min / 10min</option>
+                <option value="foco">Mais foco — 50min / 15min</option>
+                <option value="focoTotal">Foco total — 60min / 15min</option>
+            </select>
+        </div>
+
+        <!-- display do timer -->
+        <div id="timer">25:00</div>
+        <p class="subtitulo-timer" id="subtituloTimer">25 minutos de estudo</p>
+
+        <!-- barra de progresso -->
+        <div class="progress-wrap">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- botões -->
+        <div class="btns">
+            <button class="start" onclick="toggleTimer()" id="btnPlay" title="Play/Pause">
+                <img src="/logos_google/play_arrow_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="play" id="iconPlay">
+            </button>
+        </div>
+
+        <p id="tempo-total"></p>
+    </div>
+
+    <!-- Metas diárias -->
+    <section class="metas-section">
+        <h3>⚡ Metas do dia</h3>
+        <div class="metas-grid">
+            <div class="meta-card">
+                <span class="meta-label">Pomodoros</span>
+                <span class="meta-valor" id="metaPomodorosValor">0 / 4</span>
+                <div class="meta-bar-wrap">
+                    <div class="meta-bar" id="metaPomodorosBar" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="meta-card">
+                <span class="meta-label">Minutos hoje</span>
+                <span class="meta-valor" id="metaMinutosValor">0 / 100</span>
+                <div class="meta-bar-wrap">
+                    <div class="meta-bar" id="metaMinutosBar" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="meta-card">
+                <span class="meta-label">Streak atual</span>
+                <span class="meta-valor" id="metaStreak">0 🔥</span>
+                <div class="meta-bar-wrap">
+                    <div class="meta-bar" id="metaStreakBar" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="meta-card">
+                <span class="meta-label">Sessão atual</span>
+                <span class="meta-valor" id="metaSessaoAtual">0 min</span>
+                <div class="meta-bar-wrap">
+                    <div class="meta-bar" id="metaSessaoBar" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendário de streaks -->
+    <section class="calendario-section">
+        <h3>📅 Streaks do mês</h3>
+        <div class="calendario-wrap">
+            <div class="cal-header">
+                <button class="cal-nav-btn" onclick="navegarMes(-1)">‹</button>
+                <span id="calTitulo">Maio 2026</span>
+                <button class="cal-nav-btn" onclick="navegarMes(1)">›</button>
+            </div>
+            <div class="cal-dias-semana">
+                <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+        </div>
+    </section>
+
+    <script src="pomodoro.js"></script>
+</body>
+</html>
