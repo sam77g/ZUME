@@ -1,6 +1,6 @@
 /* pomodoro.js — timer + alarme + pausa auto + modos + metas + calendário */
 
-const API = "http://localhost:8080";
+const API = "https://zume-fawu.onrender.com";
 
 /* ── storage por usuário ─────────────────────────────────────
    Cada usuário tem seu próprio espaço de chaves no localStorage,

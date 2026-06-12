@@ -1,11 +1,12 @@
 /*
  * server.js — Backend Pomodoro + Groq IA (porta do server.c para Node.js/Express)
  *
- * Mantém EXATAMENTE as mesmas rotas, formatos de entrada/saída e o mesmo
- * arquivo pomodoro.db do backend original em C, para que o frontend
- * (script02.js, pomodoro.js) continue funcionando sem nenhuma alteração.
+ * Mantém EXATAMENTE as mesmas rotas, formatos de entrada/saída do backend original,
+ * para que o frontend (script02.js, pomodoro.js) continue funcionando sem nenhuma alteração.
  *
- * Instalar:   npm install
+ * Agora atualizado com criptografia de senhas robusta via PBKDF2 + Salt.
+ *
+ * Instalar:   npm install express cors better-sqlite3
  * Executar:   npm start   (ou: node server.js)
  */
 
@@ -20,6 +21,31 @@ const DB_FILE = "pomodoro.db";
 // Mesma chave usada no proxy de IA do server.c
 const GROQ_API_KEY = process.env.GROQ_API_KEY || "";
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+
+// ── Funções de Criptografia Segura (PBKDF2 + Salt) ──────────────────
+
+// Gera um hash robusto e lento, protegendo as senhas dos alunos contra força bruta
+function gerarHashSenha(senhaPura) {
+  // Cria um "salt" aleatório único de 16 bytes convertido para hexadecimal
+  const salt = crypto.randomBytes(16).toString("hex");
+  // Executa o PBKDF2: aplica SHA-512 por 1000 iterações para tornar o processo computacionalmente pesado para invasores
+  const hash = crypto.pbkdf2Sync(senhaPura, salt, 1000, 64, "sha512").toString("hex");
+  // Retorna o salt e o hash gerados unidos por ":"
+  return `${salt}:${hash}`;
+}
+
+// Verifica se a senha digitada no login bate com a criptografia salva no banco
+function verificarSenha(senhaDigitada, senhaArmazenada) {
+  try {
+    // Separa o salt original e o hash correspondente
+    const [salt, hashOriginal] = senhaArmazenada.split(":");
+    // Recria o hash a partir da senha fornecida usando o mesmo salt gerado no cadastro
+    const hashDigitado = crypto.pbkdf2Sync(senhaDigitada, salt, 1000, 64, "sha512").toString("hex");
+    return hashOriginal === hashDigitado;
+  } catch (err) {
+    return false; // Retorna falso caso o formato da string armazenada seja inválido (ex: hashes antigos)
+  }
+}
 
 // ── banco de dados ──────────────────────────────────────────
 const db = new Database(DB_FILE);
@@ -42,14 +68,6 @@ db.exec(`
   );
 `);
 
-// ── utilitários ──────────────────────────────────────────────
-
-// Mesmo algoritmo do C: SHA-256 hex, sem salt (mantém compatibilidade
-// com senhas já cadastradas pelo backend antigo).
-function sha256Hex(texto) {
-  return crypto.createHash("sha256").update(texto, "utf8").digest("hex");
-}
-
 // ── app ──────────────────────────────────────────────────────
 const app = express();
 app.use(cors()); // equivalente a Access-Control-Allow-Origin: *
@@ -64,11 +82,13 @@ app.post("/cadastro", (req, res) => {
   }
 
   try {
-    const senhaHash = sha256Hex(senha);
+    // 🚨 ALTERAÇÃO: Gera o hash seguro com Salt + PBKDF2 em vez do SHA256 puro
+    const senhaHashSegura = gerarHashSenha(senha);
+    
     const stmt = db.prepare(
       "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?);"
     );
-    stmt.run(nome, email, senhaHash);
+    stmt.run(nome, email, senhaHashSegura);
     return res.json({ ok: true, msg: "Conta criada!" });
   } catch (err) {
     // ex: e-mail duplicado (UNIQUE constraint)
@@ -84,15 +104,21 @@ app.post("/login", (req, res) => {
     return res.json({ ok: false, msg: "Campos faltando" });
   }
 
-  const senhaHash = sha256Hex(senha);
-  const row = db
-    .prepare("SELECT id, nome FROM usuarios WHERE email = ? AND senha = ? LIMIT 1;")
-    .get(email, senhaHash);
+  try {
+    // 🚨 ALTERAÇÃO: Busca o usuário apenas pelo e-mail primeiro
+    const row = db
+      .prepare("SELECT id, nome, senha FROM usuarios WHERE email = ? LIMIT 1;")
+      .get(email);
 
-  if (row) {
-    return res.json({ ok: true, id: row.id, nome: row.nome });
+    // 🚨 ALTERAÇÃO: Usa o utilitário nativo para validar os hashes com salt de forma segura
+    if (row && verificarSenha(senha, row.senha)) {
+      return res.json({ ok: true, id: row.id, nome: row.nome });
+    }
+    
+    return res.json({ ok: false, msg: "Incorreto" });
+  } catch (err) {
+    return res.json({ ok: false, msg: "Erro interno" });
   }
-  return res.json({ ok: false, msg: "Incorreto" });
 });
 
 // ── rota: salvar sessão de estudo ────────────────────────────
