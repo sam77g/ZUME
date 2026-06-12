@@ -18,7 +18,7 @@ const PORT = 8080;
 const DB_FILE = "pomodoro.db";
 
 // Mesma chave usada no proxy de IA do server.c
-const GROQ_API_KEY = "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";
+const GROQ_API_KEY = process.env.GROQ_API_KEY || "";
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 // ── banco de dados ──────────────────────────────────────────
