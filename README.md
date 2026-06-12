@@ -2,7 +2,7 @@
 
 O **ZUME** é uma plataforma web completa voltada para o foco, gerenciamento de tempo e otimização dos estudos. O projeto integra o clássico método **Pomodoro** a recursos modernos, como o acompanhamento de metas diárias, registro de *streaks* (dias consecutivos de estudo), histórico em calendário e assistência de Inteligência Artificial para geração automática de resumos e roteiros de estudo a partir de arquivos e notas do estudante.
 
-Este repositório compreende a arquitetura unificada do sistema, contendo um frontend responsivo e dinâmico integrado a um backend robusto em **Node.js** com **Express** e banco de dados **SQLite**.
+Este repositório compreende a arquitetura unificada do sistema, contendo um frontend responsivo e dinâmico integrado a um backend robusto em **Node.js** com **Express** e banco de dados **PostgreSQL** hospedado no **Supabase**.
 
 ---
 
@@ -15,7 +15,7 @@ Este repositório compreende a arquitetura unificada do sistema, contendo um fro
   - 📋 **Resumos Estruturados** do conteúdo.
   - 🗺️ **Roteiros Dinâmicos de Estudo** personalizados.
 - **Renderização Matemática e Markdown:** Suporte nativo a fórmulas matemáticas complexas via **MathJax** e formatação rica de texto usando **Marked**.
-- **Sistema de Autenticação Completo:** Telas de Login e Cadastro integradas de ponta a ponta com o backend rodando em banco de dados SQLite.
+- **Sistema de Autenticação Completo:** Telas de Login e Cadastro integradas de ponta a ponta com o backend rodando em banco de dados PostgreSQL (Supabase).
 
 ---
 
@@ -30,7 +30,8 @@ Este repositório compreende a arquitetura unificada do sistema, contendo um fro
 
 ### **Backend**
 - **Node.js** & **Express** (Estrutura de rotas HTTP, tratamento de CORS e JSON parser)
-- **Better-SQLite3** (Banco de dados relacional leve e de altíssima performance para persistência de usuários e sessões de estudo)
+- **PostgreSQL** via **Supabase** (Banco de dados relacional remoto para persistência definitiva de usuários e sessões de estudo)
+- **node-postgres (pg)** (Cliente de conexão e queries com o PostgreSQL)
 - **Crypto** (Módulo nativo para segurança de credenciais e utilitários de hash)
 - **Fetch API** (Integração assíncrona com os modelos de LLM da Groq)
 
@@ -50,9 +51,10 @@ Este repositório compreende a arquitetura unificada do sistema, contendo um fro
 ├── script02.js           # Orquestrador do frontend para requisições de login/cadastro
 ├── conta.html            # Dashboard de perfil do usuário e estatísticas de conquistas
 ├── teste.html            # Área de estudos integrada com a IA da Groq
-├── server.js             # Servidor Backend em Node.js / Express com rotas de API e Banco SQLite
+├── server.js             # Servidor Backend em Node.js / Express com rotas de API e PostgreSQL (Supabase)
 └── README.md             # Documentação oficial do projeto
 ```
+
 ## Como Rodar o Projeto Localmente
 Pré-requisitos
 Antes de iniciar, certifique-se de ter instalado em sua máquina:
@@ -60,6 +62,8 @@ Antes de iniciar, certifique-se de ter instalado em sua máquina:
 Node.js (versão 16 ou superior recomendada)
 
 Um editor de código (como o VS Code)
+
+Uma conta no Supabase com um projeto PostgreSQL criado (ou outra instância PostgreSQL acessível)
 
 ### 1. Configurando o Backend
 Clone o repositório e acesse a branch correta:
@@ -73,33 +77,34 @@ Instale as dependências necessárias do servidor:
 
 ```
 Bash
-npm install express cors better-sqlite3
+npm install express cors pg
 ```
 
-
-
-Adicione sua chave de API da Groq às variáveis de ambiente do sistema (Opcional — necessário apenas se desejar usar as funções de assistência por IA localmente):
+Adicione a string de conexão do seu banco PostgreSQL (Supabase) e, opcionalmente, sua chave de API da Groq às variáveis de ambiente do sistema:
 
 No Linux/macOS:
 ```
 Bash
+export DATABASE_URL="postgres://usuario:senha@host:5432/nome_do_banco"
 export GROQ_API_KEY="sua_chave_aqui"
 ```
 No Windows (Prompt de Comando):
 ```
 DOS
+set DATABASE_URL=postgres://usuario:senha@host:5432/nome_do_banco
 set GROQ_API_KEY=sua_chave_aqui
 No Windows (PowerShell):
 ```
 ```
 PowerShell
+$env:DATABASE_URL="postgres://usuario:senha@host:5432/nome_do_banco"
 $env:GROQ_API_KEY="sua_chave_aqui"
 ```
 Inicialize o servidor backend:
 ```
 Bash
 node server.js
-O servidor iniciará por padrão na porta 3000 (ou na porta definida pela variável global PORT) e criará automaticamente o banco de dados local chamado pomodoro.db.
+O servidor iniciará por padrão na porta 3000 (ou na porta definida pela variável global PORT) e se conectará automaticamente ao banco de dados PostgreSQL configurado na variável DATABASE_URL, criando as tabelas necessárias caso não existam.
 ```
 2. Configurando o Frontend
 Como o frontend é composto por páginas estáticas em HTML/CSS/JS puros, você não precisa compilar nem empacotar os arquivos.
@@ -118,10 +123,13 @@ O ecossistema do ZUME já está configurado e disponível publicamente na nuvem 
 Frontend (Interface do Usuário): Pode ser acessado diretamente através das GitHub Pages no link oficial:
 👉 https://sam77g.github.io/ZUME
 
-Backend (API e Banco de Dados):
+Backend (API):
 O servidor Node.js está hospedado de forma contínua na plataforma Render sob a URL base:
 https://zume-fawu.onrender.com
 
-Nota de Arquitetura: Quando você interage com o sistema hospedado no GitHub Pages, os scripts integrados no cliente realizam todas as chamadas assíncronas e persistência de dados de forma nativa e automática com o servidor de produção no Render. Isso garante que logins, cadastro de sessões e requisições à Inteligência Artificial funcionem em tempo real de qualquer lugar, sem necessidade de deploy adicional.
+Banco de Dados:
+A persistência de dados é feita em PostgreSQL hospedado no Supabase, conectado ao backend via variável de ambiente DATABASE_URL.
+
+Nota de Arquitetura: Quando você interage com o sistema hospedado no GitHub Pages, os scripts integrados no cliente realizam todas as chamadas assíncronas e persistência de dados de forma nativa e automática com o servidor de produção no Render, que por sua vez se comunica com o banco PostgreSQL no Supabase. Isso garante que logins, cadastro de sessões e requisições à Inteligência Artificial funcionem em tempo real de qualquer lugar, sem necessidade de deploy adicional.
 
 Desenvolvido como Trabalho de Discente Efetivo (TDE) para a disciplina de Introdução à Linguagem de Programação. 🚀
