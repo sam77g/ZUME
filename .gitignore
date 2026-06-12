@@ -15,3 +15,8 @@ Thumbs.db
 
 backend/pomodoro.db
 backend/server
+
+node_modules/
+*.db
+.env
+.env.*

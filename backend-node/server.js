@@ -14,7 +14,7 @@ const cors = require("cors");
 const crypto = require("crypto");
 const Database = require("better-sqlite3");
 
-const PORT = 8080;
+const PORT = process.env.PORT || 3000;
 const DB_FILE = "pomodoro.db";
 
 // Mesma chave usada no proxy de IA do server.c
