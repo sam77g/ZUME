@@ -235,10 +235,10 @@ function iniciarInterval() {
 function atualizarBotaoPlay() {
     const icon = document.getElementById("iconPlay");
     if (rodando) {
-        icon.src = "/logos_google/pause_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg";
+        icon.src = "../logos_google/pause_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg";
         icon.alt = "pausar";
     } else {
-        icon.src = "/logos_google/play_arrow_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg";
+        icon.src = "../logos_google/play_arrow_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg";
         icon.alt = "play";
     }
 }
