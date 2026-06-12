@@ -8,6 +8,8 @@ O projeto tem como objetivo auxiliar estudantes na organização dos estudos, pr
 
 A plataforma reúne funcionalidades como gerenciamento de sessões Pomodoro, metas de estudo, autenticação de usuários, processamento de materiais didáticos e integração com Inteligência Artificial para geração de conteúdo educacional.
 
+Esse projeto tem fins educacionais e os dados estão salvos em um servidor compartilhado (Render/SQLite).
+Para sua segurança, não utilize a mesma senha do seu e-mail institucional ou de sistemas bancários.
 ---
 
 ## Objetivos
