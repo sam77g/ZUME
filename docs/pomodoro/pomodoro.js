@@ -291,7 +291,7 @@ async function salvarSessao(duracao_seg) {
     if (duracao_seg <= 0) return;
     if (!_token) return;
     try {
-        await fetch(`${API}/salvar_sessao`, {
+        await fetch(`${API}/sessoes/salvar`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -307,7 +307,7 @@ async function salvarSessao(duracao_seg) {
 async function carregarTempoTotal() {
     if (!_token) return;
     try {
-        const res  = await fetch(`${API}/tempo_total`, {
+        const res  = await fetch(`${API}/sessoes/tempo_total`, {
             headers: { "Authorization": `Bearer ${_token}` }
         });
         const data = await res.json();
