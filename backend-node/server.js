@@ -1,22 +1,25 @@
 /*
  * server.js — Backend ZUME (local)
- * Segurança: bcrypt + JWT
+ * Segurança: bcrypt + JWT + Helmet + Rate Limit + Zod
  * Rodar: npm install && npm start
  */
 
 require("dotenv").config();
 
-const express = require("express");
-const cors    = require("cors");
-const bcrypt  = require("bcrypt");
-const jwt     = require("jsonwebtoken");
-const { Pool } = require("pg");
+const express   = require("express");
+const cors      = require("cors");
+const helmet    = require("helmet");
+const rateLimit = require("express-rate-limit");
+const bcrypt    = require("bcrypt");
+const jwt       = require("jsonwebtoken");
+const { z }     = require("zod");
+const { Pool }  = require("pg");
 
-const PORT        = process.env.PORT || 3000;
-const JWT_SECRET  = process.env.JWT_SECRET;
+const PORT         = process.env.PORT || 3000;
+const JWT_SECRET   = process.env.JWT_SECRET;
 const GROQ_API_KEY = process.env.GROQ_API_KEY || "";
-const GROQ_URL    = "https://api.groq.com/openai/v1/chat/completions";
-const SALT_ROUNDS = 12;
+const GROQ_URL     = "https://api.groq.com/openai/v1/chat/completions";
+const SALT_ROUNDS  = 12;
 
 // ── Validação de variáveis obrigatórias ───────────────────────
 if (!JWT_SECRET) {
@@ -67,6 +70,22 @@ const inicializarTabelas = async () => {
 };
 inicializarTabelas();
 
+// ── Schemas de validação (Zod) ────────────────────────────────
+const SchemaCadastro = z.object({
+  nome:  z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100),
+  email: z.string().email("Email inválido"),
+  senha: z.string().min(6, "Senha deve ter pelo menos 6 caracteres").max(128),
+});
+
+const SchemaLogin = z.object({
+  email: z.string().email("Email inválido"),
+  senha: z.string().min(1, "Informe a senha"),
+});
+
+const SchemaSessao = z.object({
+  duracao_seg: z.number().int().positive("Duração inválida"),
+});
+
 // ── Middleware JWT ─────────────────────────────────────────────
 function autenticar(req, res, next) {
   const auth = req.headers.authorization;
@@ -82,20 +101,69 @@ function autenticar(req, res, next) {
   }
 }
 
+// ── Rate limiters ──────────────────────────────────────────────
+// Geral: 100 requisições por 15 minutos por IP
+const limitadorGeral = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { ok: false, msg: "Muitas requisições. Aguarde alguns minutos." },
+});
+
+// Login/cadastro: 10 tentativas por 15 minutos (proteção contra brute force)
+const limitadorAuth = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { ok: false, msg: "Muitas tentativas de login. Aguarde 15 minutos." },
+});
+
+// IA: 20 chamadas por minuto (protege sua GROQ_API_KEY)
+const limitadorIA = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  message: { ok: false, msg: "Limite de requisições à IA atingido. Aguarde 1 minuto." },
+});
+
 // ── App ────────────────────────────────────────────────────────
 const app = express();
-app.use(cors({ origin: "*" }));
-app.use(express.json());
+
+// Helmet — adiciona ~15 headers de segurança automaticamente
+app.use(helmet());
+
+// CORS — aceita apenas origens conhecidas
+const origensPermitidas = [
+  "http://localhost:5500",   // Live Server padrão do VS Code
+  "http://127.0.0.1:5500",
+  "http://localhost:5173",   // Vite (futuro)
+  "http://127.0.0.1:5173",
+  "null",                    // abertura direta via file:// no navegador
+];
+app.use(cors({
+  origin: (origin, callback) => {
+    // Permite sem origin (ex: curl, Insomnia, apps mobile)
+    if (!origin || origensPermitidas.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn("[CORS] Origem bloqueada:", origin);
+      callback(new Error("CORS: origem não permitida"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+app.use(express.json({ limit: "1mb" })); // limita tamanho do body
+app.use(limitadorGeral);                  // rate limit em todas as rotas
 
 // ── POST /cadastro ─────────────────────────────────────────────
-app.post("/cadastro", async (req, res) => {
-  const { nome, email, senha } = req.body || {};
-  if (!nome || !email || !senha) {
-    return res.json({ ok: false, msg: "Preencha todos os campos" });
+app.post("/cadastro", limitadorAuth, async (req, res) => {
+  const parse = SchemaCadastro.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ ok: false, msg: parse.error.errors[0].message });
   }
-  if (senha.length < 6) {
-    return res.json({ ok: false, msg: "Senha deve ter pelo menos 6 caracteres" });
-  }
+  const { nome, email, senha } = parse.data;
+
   try {
     const hash = await bcrypt.hash(senha, SALT_ROUNDS);
     await db.query(
@@ -109,11 +177,13 @@ app.post("/cadastro", async (req, res) => {
 });
 
 // ── POST /login ────────────────────────────────────────────────
-app.post("/login", async (req, res) => {
-  const { email, senha } = req.body || {};
-  if (!email || !senha) {
-    return res.json({ ok: false, msg: "Preencha e-mail e senha" });
+app.post("/login", limitadorAuth, async (req, res) => {
+  const parse = SchemaLogin.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ ok: false, msg: parse.error.errors[0].message });
   }
+  const { email, senha } = parse.data;
+
   try {
     const result = await db.query(
       "SELECT id, nome, senha FROM usuarios WHERE email = $1 LIMIT 1;",
@@ -139,14 +209,14 @@ app.post("/login", async (req, res) => {
 
 // ── POST /salvar_sessao (protegida) ───────────────────────────
 app.post("/salvar_sessao", autenticar, async (req, res) => {
-  const { duracao_seg } = req.body || {};
-  if (!duracao_seg || isNaN(parseInt(duracao_seg))) {
-    return res.json({ ok: false });
+  const parse = SchemaSessao.safeParse(req.body);
+  if (!parse.success) {
+    return res.status(400).json({ ok: false, msg: parse.error.errors[0].message });
   }
   try {
     await db.query(
       "INSERT INTO sessoes (usuario_id, duracao_seg) VALUES ($1, $2);",
-      [req.usuario.id, parseInt(duracao_seg, 10)]
+      [req.usuario.id, parse.data.duracao_seg]
     );
     return res.json({ ok: true });
   } catch (err) {
@@ -175,8 +245,8 @@ app.get("/tempo_total", autenticar, async (req, res) => {
   }
 });
 
-// ── POST /ia (protegida) ───────────────────────────────────────
-app.post("/ia", autenticar, async (req, res) => {
+// ── POST /ia (protegida + rate limit próprio) ─────────────────
+app.post("/ia", autenticar, limitadorIA, async (req, res) => {
   if (!GROQ_API_KEY) {
     return res.status(500).json({ ok: false, msg: "GROQ_API_KEY não configurada no .env" });
   }
@@ -196,13 +266,24 @@ app.post("/ia", autenticar, async (req, res) => {
   }
 });
 
-// ── GET /me — retorna dados do usuário logado ──────────────────
+// ── GET /me (protegida) ────────────────────────────────────────
 app.get("/me", autenticar, (req, res) => {
   res.json({ ok: true, id: req.usuario.id, nome: req.usuario.nome });
 });
 
+// ── 404 ────────────────────────────────────────────────────────
 app.use((req, res) => res.status(404).json({ ok: false, msg: "Rota não encontrada" }));
 
+// ── Handler global de erros ───────────────────────────────────
+app.use((err, req, res, next) => {
+  if (err.message && err.message.includes("CORS")) {
+    return res.status(403).json({ ok: false, msg: err.message });
+  }
+  console.error("[ERRO]", err.message);
+  res.status(500).json({ ok: false, msg: "Erro interno do servidor" });
+});
+
 app.listen(PORT, () => {
-  console.log(`\n🍅 ZUME Backend rodando em http://localhost:${PORT}\n`);
+  console.log(`\n🍅 ZUME Backend rodando em http://localhost:${PORT}`);
+  console.log(`   Helmet ✓  Rate Limit ✓  Zod ✓  JWT ✓  bcrypt ✓\n`);
 });
