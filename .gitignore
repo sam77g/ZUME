@@ -1,0 +1,22 @@
+# Banco de dados
+*.db
+
+# Binários compilados
+server
+*.o
+*.out
+
+# Git
+.git
+
+# Linux
+.DS_Store
+Thumbs.db
+
+backend/pomodoro.db
+backend/server
+
+node_modules/
+*.db
+.env
+.env.*
