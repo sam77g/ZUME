@@ -3,7 +3,6 @@
 ## 1. Configurar variáveis de ambiente
 
 Entre na pasta `backend-node/` e crie o arquivo `.env`:
-alsjalshaisaidsgb
 ```
 DATABASE_URL=postgres://postgres:[SUA-SENHA]@db.[SEU-PROJETO].supabase.co:5432/postgres
 GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxx
