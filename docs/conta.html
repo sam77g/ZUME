@@ -347,10 +347,25 @@ main {
 const API = "http://localhost:3000";
 
 // ── dados do usuário ──
-const nome = sessionStorage.getItem("usuario_nome") || "Estudante";
-const id   = sessionStorage.getItem("usuario_id");
+/* ── auth JWT ─────────────────────────────────────────────── */
+const _token = localStorage.getItem("zume_token");
+if (!_token) { window.location.href = "login.html"; }
+function _decodeJWT(t) {
+  try { return JSON.parse(atob(t.split(".")[1])); } catch { return null; }
+}
+const _payload = _decodeJWT(_token);
+const nome = _payload ? _payload.nome : "Estudante";
+const id   = _payload ? _payload.id   : null;
 document.getElementById("nomeUsuario").textContent = nome;
 document.getElementById("emailUsuario").textContent = id ? `ID #${id}` : "Visitante";
+
+// ── logout ──────────────────────────────────────────────────
+const btnLogout = document.getElementById("btnLogout");
+if (btnLogout) btnLogout.addEventListener("click", () => {
+    localStorage.removeItem("zume_token");
+    localStorage.removeItem("zume_nome");
+    window.location.href = "login.html";
+});
 
 // ── storage por usuário (evita herdar dados de outra conta) ──
 const usuarioId = id || "anon";
@@ -486,7 +501,9 @@ async function carregarStats() {
         return;
     }
     try {
-        const res  = await fetch(`${API}/tempo_total?usuario_id=${id}`);
+        const res  = await fetch(`${API}/tempo_total`, {
+            headers: { "Authorization": `Bearer ${_token}` }
+        });
         const data = await res.json();
         if (data.ok) {
             const h = Math.floor(data.total_seg / 3600);

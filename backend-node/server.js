@@ -1,21 +1,30 @@
 /*
- * server.js — Backend ZUME (modo local)
- * Rodar: node server.js
- * Requer: arquivo .env com DATABASE_URL e GROQ_API_KEY
+ * server.js — Backend ZUME (local)
+ * Segurança: bcrypt + JWT
+ * Rodar: npm install && npm start
  */
 
 require("dotenv").config();
 
 const express = require("express");
 const cors    = require("cors");
-const crypto  = require("crypto");
+const bcrypt  = require("bcrypt");
+const jwt     = require("jsonwebtoken");
 const { Pool } = require("pg");
 
-const PORT         = process.env.PORT || 3000;
+const PORT        = process.env.PORT || 3000;
+const JWT_SECRET  = process.env.JWT_SECRET;
 const GROQ_API_KEY = process.env.GROQ_API_KEY || "";
-const GROQ_URL     = "https://api.groq.com/openai/v1/chat/completions";
+const GROQ_URL    = "https://api.groq.com/openai/v1/chat/completions";
+const SALT_ROUNDS = 12;
 
-// ── Banco de dados ────────────────────────────────────────────
+// ── Validação de variáveis obrigatórias ───────────────────────
+if (!JWT_SECRET) {
+  console.error("[FATAL] JWT_SECRET não definido no .env — servidor não iniciado.");
+  process.exit(1);
+}
+
+// ── Banco de dados ─────────────────────────────────────────────
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes("supabase")
@@ -30,7 +39,7 @@ db.connect()
   .then(() => console.log("[DATABASE] Conectado ao PostgreSQL!"))
   .catch(err => {
     console.error("[DATABASE] Erro ao conectar:", err.message);
-    console.error("           Verifique o DATABASE_URL no arquivo .env");
+    console.error("           Verifique o DATABASE_URL no .env");
   });
 
 const inicializarTabelas = async () => {
@@ -58,89 +67,100 @@ const inicializarTabelas = async () => {
 };
 inicializarTabelas();
 
-// ── Criptografia ──────────────────────────────────────────────
-function gerarHashSenha(senhaPura) {
-  const salt = crypto.randomBytes(16).toString("hex");
-  const hash = crypto.pbkdf2Sync(senhaPura, salt, 1000, 64, "sha512").toString("hex");
-  return `${salt}:${hash}`;
-}
-
-function verificarSenha(senhaDigitada, senhaArmazenada) {
+// ── Middleware JWT ─────────────────────────────────────────────
+function autenticar(req, res, next) {
+  const auth = req.headers.authorization;
+  if (!auth || !auth.startsWith("Bearer ")) {
+    return res.status(401).json({ ok: false, msg: "Não autorizado" });
+  }
   try {
-    const [salt, hashOriginal] = senhaArmazenada.split(":");
-    const hashDigitado = crypto.pbkdf2Sync(senhaDigitada, salt, 1000, 64, "sha512").toString("hex");
-    return hashOriginal === hashDigitado;
+    const payload = jwt.verify(auth.split(" ")[1], JWT_SECRET);
+    req.usuario = payload; // { id, nome }
+    next();
   } catch {
-    return false;
+    return res.status(401).json({ ok: false, msg: "Token inválido ou expirado. Faça login novamente." });
   }
 }
 
-// ── App ───────────────────────────────────────────────────────
+// ── App ────────────────────────────────────────────────────────
 const app = express();
-app.use(cors({ origin: "*" })); // local: aceita qualquer origem
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-// ── Rota: cadastro ────────────────────────────────────────────
+// ── POST /cadastro ─────────────────────────────────────────────
 app.post("/cadastro", async (req, res) => {
   const { nome, email, senha } = req.body || {};
-  if (!nome || !email || !senha) return res.json({ ok: false, msg: "Campos faltando" });
-
+  if (!nome || !email || !senha) {
+    return res.json({ ok: false, msg: "Preencha todos os campos" });
+  }
+  if (senha.length < 6) {
+    return res.json({ ok: false, msg: "Senha deve ter pelo menos 6 caracteres" });
+  }
   try {
+    const hash = await bcrypt.hash(senha, SALT_ROUNDS);
     await db.query(
       "INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3);",
-      [nome, email, gerarHashSenha(senha)]
+      [nome.trim(), email.trim().toLowerCase(), hash]
     );
-    return res.json({ ok: true, msg: "Conta criada!" });
+    return res.json({ ok: true, msg: "Conta criada! Faça login." });
   } catch {
-    return res.json({ ok: false, msg: "Erro ou email já cadastrado" });
+    return res.json({ ok: false, msg: "Email já cadastrado" });
   }
 });
 
-// ── Rota: login ───────────────────────────────────────────────
+// ── POST /login ────────────────────────────────────────────────
 app.post("/login", async (req, res) => {
   const { email, senha } = req.body || {};
-  if (!email || !senha) return res.json({ ok: false, msg: "Campos faltando" });
-
+  if (!email || !senha) {
+    return res.json({ ok: false, msg: "Preencha e-mail e senha" });
+  }
   try {
     const result = await db.query(
       "SELECT id, nome, senha FROM usuarios WHERE email = $1 LIMIT 1;",
-      [email]
+      [email.trim().toLowerCase()]
     );
     const row = result.rows[0];
-    if (row && verificarSenha(senha, row.senha)) {
-      return res.json({ ok: true, id: row.id, nome: row.nome });
-    }
-    return res.json({ ok: false, msg: "Email ou senha incorretos" });
-  } catch {
+    if (!row) return res.json({ ok: false, msg: "Email ou senha incorretos" });
+
+    const senhaCorreta = await bcrypt.compare(senha, row.senha);
+    if (!senhaCorreta) return res.json({ ok: false, msg: "Email ou senha incorretos" });
+
+    const token = jwt.sign(
+      { id: row.id, nome: row.nome },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+    return res.json({ ok: true, token, nome: row.nome });
+  } catch (err) {
+    console.error("[LOGIN]", err.message);
     return res.json({ ok: false, msg: "Erro interno" });
   }
 });
 
-// ── Rota: salvar sessão ───────────────────────────────────────
-app.post("/salvar_sessao", async (req, res) => {
-  const { usuario_id, duracao_seg } = req.body || {};
-  if (usuario_id === undefined || duracao_seg === undefined) return res.json({ ok: false });
-
+// ── POST /salvar_sessao (protegida) ───────────────────────────
+app.post("/salvar_sessao", autenticar, async (req, res) => {
+  const { duracao_seg } = req.body || {};
+  if (!duracao_seg || isNaN(parseInt(duracao_seg))) {
+    return res.json({ ok: false });
+  }
   try {
     await db.query(
       "INSERT INTO sessoes (usuario_id, duracao_seg) VALUES ($1, $2);",
-      [parseInt(usuario_id, 10), parseInt(duracao_seg, 10)]
+      [req.usuario.id, parseInt(duracao_seg, 10)]
     );
     return res.json({ ok: true });
-  } catch {
+  } catch (err) {
+    console.error("[SESSAO]", err.message);
     return res.json({ ok: false });
   }
 });
 
-// ── Rota: tempo total ─────────────────────────────────────────
-app.get("/tempo_total", async (req, res) => {
-  const usuarioId = parseInt(req.query.usuario_id, 10);
-  if (!usuarioId) return res.json({ ok: false });
-
+// ── GET /tempo_total (protegida) ───────────────────────────────
+app.get("/tempo_total", autenticar, async (req, res) => {
   try {
     const result = await db.query(
       "SELECT COALESCE(SUM(duracao_seg),0) AS total, COUNT(*) AS sessoes FROM sessoes WHERE usuario_id = $1;",
-      [usuarioId]
+      [req.usuario.id]
     );
     const row = result.rows[0];
     return res.json({
@@ -149,13 +169,14 @@ app.get("/tempo_total", async (req, res) => {
       total_min: Math.floor(parseInt(row.total, 10) / 60),
       sessoes:   parseInt(row.sessoes, 10),
     });
-  } catch {
+  } catch (err) {
+    console.error("[TEMPO_TOTAL]", err.message);
     return res.json({ ok: false });
   }
 });
 
-// ── Rota: proxy IA (Groq) ─────────────────────────────────────
-app.post("/ia", async (req, res) => {
+// ── POST /ia (protegida) ───────────────────────────────────────
+app.post("/ia", autenticar, async (req, res) => {
   if (!GROQ_API_KEY) {
     return res.status(500).json({ ok: false, msg: "GROQ_API_KEY não configurada no .env" });
   }
@@ -175,9 +196,13 @@ app.post("/ia", async (req, res) => {
   }
 });
 
+// ── GET /me — retorna dados do usuário logado ──────────────────
+app.get("/me", autenticar, (req, res) => {
+  res.json({ ok: true, id: req.usuario.id, nome: req.usuario.nome });
+});
+
 app.use((req, res) => res.status(404).json({ ok: false, msg: "Rota não encontrada" }));
 
 app.listen(PORT, () => {
-  console.log(`\n🍅 ZUME Backend rodando em http://localhost:${PORT}`);
-  console.log(`   Abra o frontend com Live Server ou VS Code\n`);
+  console.log(`\n🍅 ZUME Backend rodando em http://localhost:${PORT}\n`);
 });

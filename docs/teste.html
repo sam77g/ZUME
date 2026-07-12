@@ -409,12 +409,15 @@ async function chamarIA(tipoAcao, tituloContainer) {
     document.getElementById('resultadoCard').style.display = 'none';
     document.getElementById('spinner').style.display = 'block';
 
+    const _tok = localStorage.getItem("zume_token");
+    if (!_tok) { window.location.href = "login.html"; return; }
+
     try {
         const res = await fetch(`${API}/ia`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                
+                'Authorization': `Bearer ${_tok}`
             },
             body: JSON.stringify({
                 model: 'llama-3.3-70b-versatile',  // modelo válido no Groq free tier

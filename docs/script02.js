@@ -1,11 +1,10 @@
-/* script02.js — conecta base.html ao servidor C */
+/* script02.js — login e cadastro */
 
 const API = "http://localhost:3000";
 
 /* ─── navegação entre formulários ─────────────────────────── */
-
-const boasVindas  = document.getElementById("boasVindas");
-const loginForm   = document.getElementById("loginForm");
+const boasVindas   = document.getElementById("boasVindas");
+const loginForm    = document.getElementById("loginForm");
 const cadastroForm = document.getElementById("cadastroForm");
 
 function mostrar(el) {
@@ -23,7 +22,6 @@ document.getElementById("irCadastro") .addEventListener("click", () => mostrar(c
 document.getElementById("irLogin")    .addEventListener("click", () => mostrar(loginForm));
 
 /* ─── utilitário: exibe mensagem inline ───────────────────── */
-
 function setMsg(formEl, texto, cor = "red") {
     let msg = formEl.querySelector(".msg-feedback");
     if (!msg) {
@@ -36,8 +34,12 @@ function setMsg(formEl, texto, cor = "red") {
     msg.textContent = texto;
 }
 
-/* ─── cadastro ────────────────────────────────────────────── */
+/* ─── redirecionar se já estiver logado ───────────────────── */
+if (localStorage.getItem("zume_token")) {
+    window.location.href = "pomodoro/pomodoro.html";
+}
 
+/* ─── cadastro ────────────────────────────────────────────── */
 document.getElementById("btnCadastrar").addEventListener("click", async () => {
     const nome  = document.getElementById("nomeUsuario").value.trim();
     const email = document.getElementById("emailcadastro").value.trim();
@@ -68,7 +70,6 @@ document.getElementById("btnCadastrar").addEventListener("click", async () => {
 });
 
 /* ─── login ───────────────────────────────────────────────── */
-
 document.getElementById("btnEntrar").addEventListener("click", async () => {
     const email = document.getElementById("email").value.trim();
     const senha = document.getElementById("senhaLogin").value;
@@ -87,10 +88,9 @@ document.getElementById("btnEntrar").addEventListener("click", async () => {
         const data = await res.json();
 
         if (data.ok) {
-            /* salva sessão do usuário no sessionStorage */
-            sessionStorage.setItem("usuario_id",   data.id);
-            sessionStorage.setItem("usuario_nome",  data.nome);
-            /* redireciona para o pomodoro */
+            /* salvar token JWT no localStorage */
+            localStorage.setItem("zume_token", data.token);
+            localStorage.setItem("zume_nome",  data.nome);
             window.location.href = "pomodoro/pomodoro.html";
         } else {
             setMsg(loginForm, data.msg || "Credenciais incorretas.");

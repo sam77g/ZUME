@@ -7,7 +7,16 @@ const API = "http://localhost:3000";
    prefixado pelo usuario_id. Assim, dados de uma conta (ex: pomodorosDia,
    minutosDia, diasEstudados, conquistasDestaque, avatarURL) não vazam
    para outra conta criada no mesmo navegador. */
-const usuarioId = sessionStorage.getItem("usuario_id") || "anon";
+/* ── auth JWT ───────────────────────────────────────────────── */
+const _token = localStorage.getItem("zume_token");
+if (!_token) { window.location.href = "../login.html"; }
+
+function _decodeJWT(token) {
+  try { return JSON.parse(atob(token.split(".")[1])); }
+  catch { return null; }
+}
+const _payload  = _decodeJWT(_token);
+const usuarioId = _payload ? String(_payload.id) : "anon";
 function chave(nome) {
     return `u${usuarioId}_${nome}`;
 }
@@ -280,13 +289,15 @@ function mudarModo(valor) {
 /* ── backend ─────────────────────────────────────────────────── */
 async function salvarSessao(duracao_seg) {
     if (duracao_seg <= 0) return;
-    const usuario_id = parseInt(sessionStorage.getItem("usuario_id"));
-    if (!usuario_id) return;
+    if (!_token) return;
     try {
         await fetch(`${API}/salvar_sessao`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ usuario_id, duracao_seg }),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${_token}`
+            },
+            body: JSON.stringify({ duracao_seg }),
         });
     } catch (e) {
         console.warn("Não foi possível salvar a sessão:", e);
@@ -294,10 +305,11 @@ async function salvarSessao(duracao_seg) {
 }
 
 async function carregarTempoTotal() {
-    const usuario_id = sessionStorage.getItem("usuario_id");
-    if (!usuario_id) return;
+    if (!_token) return;
     try {
-        const res  = await fetch(`${API}/tempo_total?usuario_id=${usuario_id}`);
+        const res  = await fetch(`${API}/tempo_total`, {
+            headers: { "Authorization": `Bearer ${_token}` }
+        });
         const data = await res.json();
         if (data.ok) {
             const h = Math.floor(data.total_seg / 3600);
