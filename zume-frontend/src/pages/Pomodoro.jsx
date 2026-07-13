@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { API } from "../lib/api";
 import { getUsuario, chave, authHeaders } from "../lib/auth";
+import { pedirPermissaoNotificacoes, agendarNotificacaoFimSessao, cancelarNotificacaoFimSessao } from "../lib/notifications";
+import { enfileirarSessaoPendente, sincronizarSessoesPendentes } from "../lib/offlineSync";
 import "./Pomodoro.css";
 
 const MODOS = {
@@ -80,6 +82,17 @@ export default function Pomodoro() {
     parseInt(localStorage.getItem(k("minutosDia")) || "0", 10)
   );
 
+  // ── offline-first: sincroniza sessões pendentes ao montar e ao reconectar ──
+  useEffect(() => {
+    if (!usuarioId || !token) return;
+    pedirPermissaoNotificacoes();
+    sincronizarSessoesPendentes(usuarioId, token);
+
+    const aoReconectar = () => sincronizarSessoesPendentes(usuarioId, token);
+    window.addEventListener("online", aoReconectar);
+    return () => window.removeEventListener("online", aoReconectar);
+  }, [usuarioId, token]);
+
   // ── reset diário ────────────────────────────────────────────
   useEffect(() => {
     if (!usuarioId) return;
@@ -120,13 +133,15 @@ export default function Pomodoro() {
   async function salvarSessao(duracaoSeg) {
     if (duracaoSeg <= 0 || !token) return;
     try {
-      await fetch(`${API}/sessoes/salvar`, {
+      const res = await fetch(`${API}/sessoes/salvar`, {
         method: "POST",
         headers: { "Content-Type": "application/json", ...authHeaders(token) },
         body: JSON.stringify({ duracao_seg: duracaoSeg }),
       });
+      if (!res.ok) throw new Error("resposta não ok");
     } catch (e) {
-      console.warn("Não foi possível salvar a sessão:", e);
+      console.warn("Não foi possível salvar a sessão agora, entrou na fila offline:", e);
+      enfileirarSessaoPendente(usuarioId, duracaoSeg);
     }
   }
 
@@ -191,6 +206,7 @@ export default function Pomodoro() {
     marcarDiaEstudado();
 
     iniciarInterval();
+    agendarNotificacaoFimSessao(conf.pausa * 60, "pausa");
   }
 
   function entrarEmEstudoSemAutoplay() {
@@ -204,6 +220,7 @@ export default function Pomodoro() {
     pararInterval();
     setRodando(false);
     tocarAlarme();
+    cancelarNotificacaoFimSessao();
 
     setEmPausa((emPausaAtual) => {
       if (!emPausaAtual) {
@@ -251,14 +268,17 @@ export default function Pomodoro() {
       pararInterval();
       setRodando(false);
       salvarEstadoTimer({ rodando: false });
+      cancelarNotificacaoFimSessao();
     } else {
       iniciarInterval();
+      agendarNotificacaoFimSessao(time, emPausa ? "pausa" : "foco");
     }
   }
 
   function resetTimer(modoParaUsar = modoAtual) {
     pararInterval();
     setRodando(false);
+    cancelarNotificacaoFimSessao();
 
     setSegundosEstudados((segAtual) => {
       if (segAtual > 0) {
@@ -322,6 +342,7 @@ export default function Pomodoro() {
           } else {
             setTime(restante);
             iniciarInterval();
+            agendarNotificacaoFimSessao(restante, estado.emPausa ? "pausa" : "foco");
           }
         } else {
           setTime(estado.time);
