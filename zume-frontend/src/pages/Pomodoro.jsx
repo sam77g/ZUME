@@ -386,7 +386,7 @@ export default function Pomodoro() {
 
   return (
     <div className={`pomodoro-page${emPausa ? " modo-pausa" : ""}`}>
-      <Navbar />
+      <Navbar variant="light" />
       <div className="pomodoro-container">
         <span className="badge-modo">{emPausa ? "☕ PAUSA" : "🍅 FOCO"}</span>
 

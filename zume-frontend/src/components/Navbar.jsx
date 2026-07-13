@@ -1,12 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
 
-export default function Navbar() {
+export default function Navbar({ variant = "solid" }) {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar${variant === "light" ? " navbar--light" : ""}`}>
       <Link to="/pomodoro" className="nav-logo">
         <img src="/assets/path58.png" alt="ZUME" />
         ZUME

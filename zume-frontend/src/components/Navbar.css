@@ -41,3 +41,34 @@
 .nav-links a:hover { background: rgba(255, 255, 255, 0.25); transform: scale(1.06); }
 .nav-links a.active { background: rgba(255, 255, 255, 0.25); }
 .nav-links img { width: 20px; height: 20px; }
+
+/* ── variante light (visual original do Pomodoro) ─────────── */
+.navbar--light {
+  max-width: 700px;
+  background: transparent;
+  box-shadow: none;
+  padding: 10px 0 24px;
+  position: static;
+}
+
+.navbar--light .nav-logo {
+  color: var(--verde-deep, rgb(0, 100, 32));
+  font-weight: 700;
+}
+
+.navbar--light .nav-logo img { width: 28px; height: 28px; }
+
+.navbar--light .nav-links a {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--verde-main, #49BA65);
+}
+
+.navbar--light .nav-links a:hover {
+  background: var(--verde-escuro, #287B4D);
+  transform: scale(1.08);
+}
+
+.navbar--light .nav-links a.active { background: var(--verde-escuro, #287B4D); }
+.navbar--light .nav-links img { width: 22px; height: 22px; }
