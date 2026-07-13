@@ -18,7 +18,7 @@
 }
 
 /* tema pausa — ativado via JS */
-body.modo-pausa {
+.pomodoro-page.modo-pausa {
   --verde-claro:  #1a3a2e;
   --verde-main:   #234d3b;
   --verde-escuro: #52c98a;
@@ -27,17 +27,17 @@ body.modo-pausa {
   transition: background-color 0.8s ease;
 }
 
-body.modo-pausa .container {
+.pomodoro-page.modo-pausa .pomodoro-container {
   background: var(--verde-main);
   border: 1.5px solid var(--pause-accent);
 }
 
-body.modo-pausa .badge-modo {
+.pomodoro-page.modo-pausa .badge-modo {
   background: var(--pause-accent);
   color: #0d2318;
 }
 
-body.modo-pausa #timer {
+.pomodoro-page.modo-pausa #timer {
   color: var(--pause-accent);
   text-shadow: 0 0 30px rgba(82, 201, 138, 0.4);
 }
@@ -49,7 +49,7 @@ body.modo-pausa #timer {
   padding: 0;
 }
 
-body {
+.pomodoro-page {
   min-height: 100vh;
   background-color: var(--verde-claro);
   font-family: "MuseoModerno", sans-serif;
@@ -61,54 +61,8 @@ body {
   transition: background-color 0.8s ease;
 }
 
-/* ── navbar ─────────────────────────────────────────────── */
-.navbar {
-  width: 100%;
-  max-width: 700px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0 24px;
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--verde-deep);
-  text-decoration: none;
-}
-
-.nav-logo img { width: 28px; height: 28px; }
-
-.nav-links {
-  display: flex;
-  gap: 6px;
-}
-
-.nav-links a {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: var(--verde-main);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s, transform 0.2s;
-  text-decoration: none;
-}
-
-.nav-links a:hover {
-  background: var(--verde-escuro);
-  transform: scale(1.08);
-}
-
-.nav-links img { width: 22px; height: 22px; }
-
 /* ── card container ──────────────────────────────────────── */
-.container {
+.pomodoro-container {
   width: 100%;
   max-width: 420px;
   background: var(--verde-main);
@@ -210,7 +164,7 @@ body {
   transition: width 1s linear, background 0.8s;
 }
 
-body.modo-pausa .progress-bar {
+.pomodoro-page.modo-pausa .progress-bar {
   background: var(--pause-accent);
 }
 
@@ -427,6 +381,6 @@ body.modo-pausa .progress-bar {
 /* ── responsivo ──────────────────────────────────────────── */
 @media (max-width: 480px) {
   #timer { font-size: 64px; }
-  .container { padding: 24px 20px 20px; }
+  .pomodoro-container { padding: 24px 20px 20px; }
   .metas-grid { grid-template-columns: 1fr 1fr; }
 }

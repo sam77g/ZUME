@@ -9,7 +9,7 @@
   --sombra: rgba(5, 27, 11, 0.3);
 }
 
-body {
+.conta-page {
   background-color: var(--verde-claro);
   font-family: "MuseoModerno", sans-serif;
   color: #1a1a1a;

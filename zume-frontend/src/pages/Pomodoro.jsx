@@ -352,11 +352,6 @@ export default function Pomodoro() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, emPausa, modoAtual, rodando, tempoTotalFase, segundosEstudados]);
 
-  useEffect(() => {
-    document.body.classList.toggle("modo-pausa", emPausa);
-    return () => document.body.classList.remove("modo-pausa");
-  }, [emPausa]);
-
   if (!token) return null;
 
   // ── render helpers ───────────────────────────────────────────
@@ -390,9 +385,9 @@ export default function Pomodoro() {
   }
 
   return (
-    <>
+    <div className={`pomodoro-page${emPausa ? " modo-pausa" : ""}`}>
       <Navbar />
-      <div className="container">
+      <div className="pomodoro-container">
         <span className="badge-modo">{emPausa ? "☕ PAUSA" : "🍅 FOCO"}</span>
 
         <div className="modo-wrap">
@@ -486,6 +481,6 @@ export default function Pomodoro() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

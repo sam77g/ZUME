@@ -74,6 +74,7 @@ export default function Login() {
   }
 
   return (
+    <div className="login-page">
     <div className="container">
       <div className="left">
         <div className="icone">
@@ -152,6 +153,7 @@ export default function Login() {
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 }

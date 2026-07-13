@@ -180,7 +180,7 @@ export default function EstudoIA() {
   if (!token) return null;
 
   return (
-    <>
+    <div className="estudoia-page">
       <Navbar />
       <div className="main-container">
         <header>
@@ -251,6 +251,6 @@ export default function EstudoIA() {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

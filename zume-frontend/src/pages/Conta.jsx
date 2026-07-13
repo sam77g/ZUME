@@ -141,7 +141,7 @@ export default function Conta() {
   const streak = calcularStreak(k);
 
   return (
-    <>
+    <div className="conta-page">
       <Navbar />
       <main className="conta-main">
         <div className="perfil-card">
@@ -210,6 +210,6 @@ export default function Conta() {
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }
