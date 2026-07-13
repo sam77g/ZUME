@@ -1,0 +1,432 @@
+@import url('https://fonts.googleapis.com/css2?family=Angkor&family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* ── variáveis de tema ──────────────────────────────────── */
+:root {
+  --verde-main:   #49BA65;
+  --verde-escuro: #287B4D;
+  --verde-deep:   rgb(0, 100, 32);
+  --verde-claro:  #E2FFDF;
+  --verde-btn:    #003202;
+  --verde-hover:  #006004;
+  --branco:       #ffffff;
+  --sombra:       rgba(5, 27, 11, 0.45);
+
+  /* tema pausa */
+  --pause-bg:     #1a3a2e;
+  --pause-card:   #234d3b;
+  --pause-accent: #52c98a;
+}
+
+/* tema pausa — ativado via JS */
+body.modo-pausa {
+  --verde-claro:  #1a3a2e;
+  --verde-main:   #234d3b;
+  --verde-escuro: #52c98a;
+  --sombra:       rgba(0, 0, 0, 0.6);
+  background-color: var(--verde-claro) !important;
+  transition: background-color 0.8s ease;
+}
+
+body.modo-pausa .container {
+  background: var(--verde-main);
+  border: 1.5px solid var(--pause-accent);
+}
+
+body.modo-pausa .badge-modo {
+  background: var(--pause-accent);
+  color: #0d2318;
+}
+
+body.modo-pausa #timer {
+  color: var(--pause-accent);
+  text-shadow: 0 0 30px rgba(82, 201, 138, 0.4);
+}
+
+/* ── reset ─────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--verde-claro);
+  font-family: "MuseoModerno", sans-serif;
+  color: var(--branco);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px 40px;
+  transition: background-color 0.8s ease;
+}
+
+/* ── navbar ─────────────────────────────────────────────── */
+.navbar {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0 24px;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--verde-deep);
+  text-decoration: none;
+}
+
+.nav-logo img { width: 28px; height: 28px; }
+
+.nav-links {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-links a {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--verde-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  background: var(--verde-escuro);
+  transform: scale(1.08);
+}
+
+.nav-links img { width: 22px; height: 22px; }
+
+/* ── card container ──────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 420px;
+  background: var(--verde-main);
+  border-radius: 24px;
+  padding: 32px 28px 28px;
+  box-shadow: 0 8px 40px var(--sombra);
+  text-align: center;
+  position: relative;
+  transition: background 0.8s ease, border 0.8s ease;
+}
+
+/* ── badge modo ──────────────────────────────────────────── */
+.badge-modo {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: var(--verde-escuro);
+  color: var(--verde-claro);
+  padding: 4px 12px;
+  border-radius: 99px;
+  margin-bottom: 14px;
+  transition: background 0.5s, color 0.5s;
+}
+
+/* ── seletor de modo ─────────────────────────────────────── */
+.modo-wrap {
+  margin-bottom: 20px;
+}
+
+.modo-wrap label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 1px;
+  opacity: 0.7;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+#modoSelect {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.2);
+  color: white;
+  font-family: "MuseoModerno", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='white' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  transition: border-color 0.2s;
+}
+
+#modoSelect:hover { border-color: rgba(255,255,255,0.5); }
+#modoSelect option { background: #287B4D; color: white; }
+
+/* ── timer display ───────────────────────────────────────── */
+#timer {
+  font-size: 80px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin: 8px 0 4px;
+  color: white;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  transition: color 0.5s;
+}
+
+.subtitulo-timer {
+  font-size: 12px;
+  opacity: 0.6;
+  letter-spacing: 0.5px;
+  margin-bottom: 22px;
+}
+
+/* ── barra de progresso ──────────────────────────────────── */
+.progress-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 100%;
+  background: rgba(255,255,255,0.85);
+  border-radius: 99px;
+  transition: width 1s linear, background 0.8s;
+}
+
+body.modo-pausa .progress-bar {
+  background: var(--pause-accent);
+}
+
+/* ── botões controle ─────────────────────────────────────── */
+.btns {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.btns button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--verde-btn);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.btns button img { width: 24px; height: 24px; }
+
+.btns button:hover {
+  background: var(--verde-hover);
+  transform: scale(1.1);
+}
+
+.btns button:active { transform: scale(0.96); }
+
+.btns .start { width: 68px; height: 68px; }
+.btns .start img { width: 30px; height: 30px; }
+
+/* ── tempo total ─────────────────────────────────────────── */
+#tempo-total {
+  font-size: 12px;
+  opacity: 0.65;
+  margin-bottom: 6px;
+  min-height: 18px;
+}
+
+/* ── seção metas ─────────────────────────────────────────── */
+.metas-section {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 24px;
+}
+
+.metas-section h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--verde-deep);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.metas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.meta-card {
+  background: var(--verde-main);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 4px 14px var(--sombra);
+  transition: transform 0.2s;
+}
+
+.meta-card:hover { transform: translateY(-2px); }
+
+.meta-card .meta-label {
+  font-size: 11px;
+  opacity: 0.7;
+  letter-spacing: 0.5px;
+}
+
+.meta-card .meta-valor {
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+}
+
+.meta-card .meta-bar-wrap {
+  height: 5px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.meta-card .meta-bar {
+  height: 100%;
+  background: rgba(255,255,255,0.7);
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+/* ── calendário de streaks ───────────────────────────────── */
+.calendario-section {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 24px;
+}
+
+.calendario-section h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--verde-deep);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.calendario-wrap {
+  background: var(--verde-main);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 14px var(--sombra);
+}
+
+.cal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cal-nav-btn {
+  width: 28px;
+  height: 28px;
+  background: rgba(0,0,0,0.2);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.cal-nav-btn:hover { background: rgba(0,0,0,0.35); }
+
+.cal-dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 6px;
+}
+
+.cal-dias-semana span {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.55;
+  letter-spacing: 0.5px;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.cal-dia {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(0,0,0,0.15);
+  color: rgba(255,255,255,0.6);
+  cursor: default;
+  position: relative;
+  transition: transform 0.15s;
+}
+
+.cal-dia.streak {
+  background: var(--verde-btn);
+  color: white;
+}
+
+.cal-dia.streak::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.15);
+}
+
+.cal-dia.hoje {
+  border: 2px solid white;
+  color: white;
+}
+
+.cal-dia.vazio { background: transparent; }
+
+/* ── responsivo ──────────────────────────────────────────── */
+@media (max-width: 480px) {
+  #timer { font-size: 64px; }
+  .container { padding: 24px 20px 20px; }
+  .metas-grid { grid-template-columns: 1fr 1fr; }
+}

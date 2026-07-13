@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --verde-main: #49BA65;
+  --verde-escuro: #287B4D;
+  --verde-deep: rgb(0, 100, 32);
+  --verde-claro: #E2FFDF;
+  --branco: #fff;
+  --sombra: rgba(5, 27, 11, 0.3);
+}
+
+body {
+  background-color: var(--verde-claro);
+  font-family: "MuseoModerno", sans-serif;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+.conta-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+.perfil-card {
+  background: var(--verde-escuro);
+  border-radius: 20px;
+  padding: 28px 24px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 6px 24px var(--sombra);
+  color: white;
+  flex-wrap: wrap;
+}
+
+.avatar-wrap { position: relative; flex-shrink: 0; }
+
+.avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: var(--verde-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: transform 0.2s;
+  overflow: hidden;
+}
+
+.avatar:hover { transform: scale(1.06); }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.avatar-edit-btn {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 24px;
+  height: 24px;
+  background: var(--verde-main);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: white;
+  transition: background 0.2s;
+}
+
+.avatar-edit-btn:hover { background: white; color: var(--verde-deep); }
+
+.perfil-info { flex: 1; }
+.perfil-info h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+.perfil-info p { font-size: 13px; opacity: 0.7; }
+
+.btn-logout {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-family: "MuseoModerno", sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-logout:hover { background: rgba(255, 255, 255, 0.15); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--verde-main);
+  border-radius: 16px;
+  padding: 18px 16px;
+  text-align: center;
+  box-shadow: 0 4px 14px var(--sombra);
+  transition: transform 0.2s;
+}
+
+.stat-card:hover { transform: translateY(-3px); }
+.stat-card .stat-valor { font-size: 26px; font-weight: 900; color: white; line-height: 1.1; }
+.stat-card .stat-label { font-size: 11px; color: rgba(255, 255, 255, 0.75); letter-spacing: 0.5px; margin-top: 4px; }
+
+.secao-titulo {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--verde-deep);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.conquistas-grid { margin-bottom: 28px; }
+
+.conquista-card {
+  background: var(--verde-escuro);
+  border-radius: 16px;
+  padding: 16px 14px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 4px 14px var(--sombra);
+  transition: transform 0.2s, opacity 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.conquista-card.bloqueada { opacity: 0.45; filter: grayscale(0.6); }
+.conquista-card.destaque { border: 2px solid rgba(255, 255, 255, 0.5); }
+.conquista-card .emoji { font-size: 30px; margin-bottom: 6px; display: block; }
+.conquista-card .nome { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+.conquista-card .req { font-size: 10px; opacity: 0.65; }
+.conquista-card:not(.bloqueada):hover { transform: translateY(-3px); }
+
+.conquistas-subtitulo {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--verde-deep);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 16px 0 8px;
+  padding-left: 2px;
+  opacity: 0.75;
+}
+
+.conquistas-subgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.btn-destaque {
+  margin-top: 8px;
+  font-size: 10px;
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-family: "MuseoModerno", sans-serif;
+  transition: background 0.2s;
+}
+
+.btn-destaque:hover { background: rgba(255, 255, 255, 0.15); }
+.btn-destaque.ativo { background: rgba(255, 255, 255, 0.25); }
+
+@media (max-width: 520px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .perfil-card { flex-direction: column; text-align: center; }
+}

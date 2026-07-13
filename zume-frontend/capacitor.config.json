@@ -1,0 +1,8 @@
+{
+  "appId": "com.zume.app",
+  "appName": "ZUME",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
