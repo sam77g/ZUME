@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import DOMPurify from "dompurify";
 import Navbar from "../components/Navbar";
 import { API } from "../lib/api";
 import { getUsuario, authHeaders } from "../lib/auth";
@@ -37,7 +38,7 @@ function renderMd(text) {
   slots.forEach((orig, i) => {
     html = html.replaceAll(`\x00MATH${i}\x00`, orig);
   });
-  return html;
+  return DOMPurify.sanitize(html);
 }
 
 export default function EstudoIA() {

@@ -14,8 +14,11 @@ router.post("/", autenticar, limitadorIA, async (req, res) => {
     if (err.message.includes("GROQ_API_KEY")) {
       return res.status(500).json({ ok: false, msg: err.message });
     }
+    if (err.message === "GROQ_TIMEOUT") {
+      return res.status(504).json({ ok: false, msg: "A IA demorou demais para responder. Tente novamente." });
+    }
     console.error("[IA]", err.message);
-    return res.json({ ok: false, msg: "Erro ao contatar a Groq" });
+    return res.status(502).json({ ok: false, msg: "Erro ao contatar a Groq" });
   }
 });
 

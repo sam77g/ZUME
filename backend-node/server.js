@@ -46,10 +46,13 @@ app.use(express.json({ limit: "1mb" }));
 app.use(limitadorGeral);
 
 // ── Rotas ──────────────────────────────────────────────────────
-app.use("/auth",    require("./routes/auth"));
-app.use("/sessoes", require("./routes/sessoes"));
-app.use("/ia",      require("./routes/ia"));
-app.use("/usuario", require("./routes/usuario"));
+app.use("/auth",       require("./routes/auth"));
+app.use("/sessoes",    require("./routes/sessoes"));
+app.use("/ia",         require("./routes/ia"));
+app.use("/usuario",    require("./routes/usuario"));
+app.use("/metas",      require("./routes/metas"));
+app.use("/streaks",    require("./routes/streaks"));
+app.use("/conquistas", require("./routes/conquistas"));
 
 // Manter compatibilidade com frontend atual (rotas antigas)
 app.use("/",        require("./routes/auth"));       // /cadastro, /login
