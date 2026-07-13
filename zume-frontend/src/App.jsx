@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Pomodoro from "./pages/Pomodoro";
 import Conta from "./pages/Conta";
 import EstudoIA from "./pages/EstudoIA";
+import SalaFoco from "./pages/SalaFoco";
 import { getToken } from "./lib/auth";
 
 export default function App() {
@@ -41,6 +42,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <EstudoIA />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sala"
+          element={
+            <ProtectedRoute>
+              <SalaFoco />
             </ProtectedRoute>
           }
         />

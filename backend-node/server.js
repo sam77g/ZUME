@@ -13,22 +13,26 @@ if (!process.env.JWT_SECRET) {
 const express   = require("express");
 const cors      = require("cors");
 const helmet    = require("helmet");
+const http      = require("http");
+const { Server } = require("socket.io");
 const { limitadorGeral } = require("./middleware/rateLimit");
+const registrarSalaFoco = require("./sockets/salaFoco");
 
 const app = express();
 
 // ── Segurança ──────────────────────────────────────────────────
+const origensPermitidas = [
+  "http://localhost:5500",
+  "http://127.0.0.1:5500",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "null",
+];
+
 app.use(helmet());
 app.use(cors({
   origin: (origin, callback) => {
-    const permitidas = [
-      "http://localhost:5500",
-      "http://127.0.0.1:5500",
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-      "null",
-    ];
-    if (!origin || permitidas.includes(origin)) {
+    if (!origin || origensPermitidas.includes(origin)) {
       callback(null, true);
     } else {
       console.warn("[CORS] Origem bloqueada:", origin);
@@ -65,8 +69,21 @@ app.use((err, req, res, next) => {
 });
 
 // ── Start ──────────────────────────────────────────────────────
+const servidorHttp = http.createServer(app);
+
+const io = new Server(servidorHttp, {
+  cors: {
+    origin: (origin, callback) => {
+      if (!origin || origensPermitidas.includes(origin)) callback(null, true);
+      else callback(new Error("CORS: origem não permitida"));
+    },
+    methods: ["GET", "POST"],
+  },
+});
+registrarSalaFoco(io);
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+servidorHttp.listen(PORT, () => {
   console.log(`\n🍅 ZUME Backend rodando em http://localhost:${PORT}`);
-  console.log(`   Helmet ✓  Rate Limit ✓  Zod ✓  JWT ✓  bcrypt ✓\n`);
+  console.log(`   Helmet ✓  Rate Limit ✓  Zod ✓  JWT ✓  bcrypt ✓  Socket.io ✓\n`);
 });

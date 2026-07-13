@@ -18,6 +18,9 @@ export default function Navbar({ variant = "solid" }) {
         <Link to="/estudo-ia" title="Materiais com IA" className={isActive("/estudo-ia") ? "active" : ""}>
           <img src="/icons/book_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Materiais" />
         </Link>
+        <Link to="/sala" title="Salas de Foco" className={`nav-emoji${isActive("/sala") ? " active" : ""}`}>
+          <span>👥</span>
+        </Link>
         <Link to="/conta" title="Conta" className={isActive("/conta") ? "active" : ""}>
           <img src="/icons/person_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Conta" />
         </Link>
