@@ -10,54 +10,55 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-const express   = require("express");
-const cors      = require("cors");
-const helmet    = require("helmet");
-const http      = require("http");
+const express    = require("express");
+const cors       = require("cors");
+const helmet     = require("helmet");
+const http       = require("http");
 const { Server } = require("socket.io");
 const { limitadorGeral } = require("./middleware/rateLimit");
-const registrarSalaFoco = require("./sockets/salaFoco");
+const registrarSalaFoco  = require("./sockets/salaFoco");
 
 const app = express();
 
-// ── Segurança ──────────────────────────────────────────────────
+// ── CORS — fonte única de verdade ──────────────────────────────
 const origensPermitidas = [
   "http://localhost:5500",
   "http://127.0.0.1:5500",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
-  "null",
+  "null", // file:// em mobile/Capacitor
+  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
 ];
 
+function corsOrigin(origin, callback) {
+  if (!origin || origensPermitidas.includes(origin)) {
+    callback(null, true);
+  } else {
+    console.warn("[CORS] Origem bloqueada:", origin);
+    callback(new Error("CORS: origem não permitida"));
+  }
+}
+
+// ── Segurança ──────────────────────────────────────────────────
 app.use(helmet());
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || origensPermitidas.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn("[CORS] Origem bloqueada:", origin);
-      callback(new Error("CORS: origem não permitida"));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin:         corsOrigin,
+  methods:        ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 app.use(express.json({ limit: "1mb" }));
 app.use(limitadorGeral);
 
 // ── Rotas ──────────────────────────────────────────────────────
-app.use("/auth",       require("./routes/auth"));
-app.use("/sessoes",    require("./routes/sessoes"));
-app.use("/ia",         require("./routes/ia"));
-app.use("/usuario",    require("./routes/usuario"));
-app.use("/metas",      require("./routes/metas"));
-app.use("/streaks",    require("./routes/streaks"));
-app.use("/conquistas", require("./routes/conquistas"));
+app.use("/auth",    require("./routes/auth"));
+app.use("/sessoes", require("./routes/sessoes"));
+app.use("/ia",      require("./routes/ia"));
+app.use("/usuario", require("./routes/usuario"));
 
-// Manter compatibilidade com frontend atual (rotas antigas)
-app.use("/",        require("./routes/auth"));       // /cadastro, /login
-app.use("/",        require("./routes/sessoes"));    // /salvar_sessao → /sessoes/salvar
-app.use("/",        require("./routes/usuario"));    // /me
+// Aliases de compatibilidade — Login.jsx ainda chama /cadastro e /login.
+// TODO: atualizar Login.jsx para /auth/cadastro e /auth/login e remover estas linhas.
+app.post("/cadastro", (req, res) => res.redirect(307, "/auth/cadastro"));
+app.post("/login",    (req, res) => res.redirect(307, "/auth/login"));
 
 // ── 404 ────────────────────────────────────────────────────────
 app.use((req, res) => res.status(404).json({ ok: false, msg: "Rota não encontrada" }));
@@ -71,20 +72,18 @@ app.use((err, req, res, next) => {
   res.status(500).json({ ok: false, msg: "Erro interno do servidor" });
 });
 
-// ── Start ──────────────────────────────────────────────────────
+// ── Socket.io — reutiliza a mesma função corsOrigin ────────────
 const servidorHttp = http.createServer(app);
 
 const io = new Server(servidorHttp, {
   cors: {
-    origin: (origin, callback) => {
-      if (!origin || origensPermitidas.includes(origin)) callback(null, true);
-      else callback(new Error("CORS: origem não permitida"));
-    },
+    origin:  corsOrigin,
     methods: ["GET", "POST"],
   },
 });
 registrarSalaFoco(io);
 
+// ── Start ──────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 servidorHttp.listen(PORT, () => {
   console.log(`\n🍅 ZUME Backend rodando em http://localhost:${PORT}`);
