@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DOMPurify from "dompurify";
 import Navbar from "../components/Navbar";
 import { API } from "../lib/api";
 import { getUsuario, authHeaders } from "../lib/auth";
@@ -38,7 +37,7 @@ function renderMd(text) {
   slots.forEach((orig, i) => {
     html = html.replaceAll(`\x00MATH${i}\x00`, orig);
   });
-  return DOMPurify.sanitize(html);
+  return html;
 }
 
 export default function EstudoIA() {
@@ -145,21 +144,15 @@ export default function EstudoIA() {
         method: "POST",
         headers: { "Content-Type": "application/json", ...authHeaders(token) },
         body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
-          max_tokens: 4096,
-          messages: [{ role: "user", content: prompts[tipoAcao] }],
+          mensagem: prompts[tipoAcao],
+          tipo: tipoAcao === "roteiro" ? "plano" : tipoAcao,
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        const msg = data?.error?.message || `Erro HTTP ${res.status}`;
-        if (res.status === 401) {
-          setErro("Chave inválida ou expirada. Gere uma nova em console.groq.com");
-        } else {
-          setErro("Erro da API Groq: " + msg);
-        }
+        setErro(data?.msg || `Erro HTTP ${res.status}`);
         return;
       }
 
