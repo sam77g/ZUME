@@ -129,5 +129,8 @@ npm run dev
 - Variáveis sensíveis apenas em `.env` (nunca commitadas)
 
 ---
+## 📄 Licença
+
+Distribuído sob a licença MIT. Veja [LICENSE](./LICENSE) para mais informações.
 
 Desenvolvido por [Samuel](https://github.com/sam77g).
