@@ -21,28 +21,21 @@ const registrarSalaFoco  = require("./sockets/salaFoco");
 const app = express();
 
 // ── CORS — fonte única de verdade ──────────────────────────────
-const origensPermitidas = [
-  "http://localhost:5500",
-  "http://127.0.0.1:5500",
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-  "null", // file:// em mobile/Capacitor
-  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
-];
+const origensPermitidas = (process.env.FRONTEND_URL || "")
+  .split(",")
+  .map(s => s.trim())
+  .concat(["http://localhost:5173", "http://localhost:3000"])
+  .filter(Boolean);
 
-function corsOrigin(origin, callback) {
-  if (!origin || origensPermitidas.includes(origin)) {
-    callback(null, true);
-  } else {
-    console.warn("[CORS] Origem bloqueada:", origin);
-    callback(new Error("CORS: origem não permitida"));
-  }
+function validarOrigem(origin, callback) {
+  if (!origin || origensPermitidas.includes(origin)) callback(null, true);
+  else callback(new Error("CORS bloqueado"));
 }
 
 // ── Segurança ──────────────────────────────────────────────────
 app.use(helmet());
 app.use(cors({
-  origin:         corsOrigin,
+  origin:         validarOrigem,
   methods:        ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
@@ -72,12 +65,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ ok: false, msg: "Erro interno do servidor" });
 });
 
-// ── Socket.io — reutiliza a mesma função corsOrigin ────────────
+// ── Socket.io — reutiliza a mesma função validarOrigem ────────────
 const servidorHttp = http.createServer(app);
 
 const io = new Server(servidorHttp, {
   cors: {
-    origin:  corsOrigin,
+    origin:  validarOrigem,
     methods: ["GET", "POST"],
   },
 });
