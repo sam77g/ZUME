@@ -32,7 +32,7 @@ export default function Login() {
       return;
     }
     try {
-      const res = await fetch(`${API}/cadastro`, {
+      const res = await fetch(`${API}/auth/cadastro`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome, email: emailC, senha: senhaCadastro }),
@@ -56,7 +56,7 @@ export default function Login() {
       return;
     }
     try {
-      const res = await fetch(`${API}/login`, {
+      const res = await fetch(`${API}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: emailL, senha: senhaLogin }),
