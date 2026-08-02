@@ -5,8 +5,12 @@
 
 require("dotenv").config();
 
-if (!process.env.JWT_SECRET) {
-  console.error("[FATAL] JWT_SECRET não definido no .env — servidor não iniciado.");
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  console.error("ERRO: JWT_SECRET ausente ou fraco. Servidor não iniciado.");
+  process.exit(1);
+}
+if (!process.env.GROQ_API_KEY) {
+  console.error("ERRO: GROQ_API_KEY ausente.");
   process.exit(1);
 }
 
