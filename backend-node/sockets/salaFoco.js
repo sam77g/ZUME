@@ -86,7 +86,7 @@ module.exports = function registrarSalaFoco(io) {
   io.on("connection", (socket) => {
     socket.on("sala:entrar", (codigo) => {
       if (!dentroDoLimite(socket.id, "sala:entrar")) {
-        socket.emit("sala:erro", { msg: "Muitas tentativas. Aguarde alguns segundos." });
+        socket.emit("sala:erro", { msg: "muitas_requisicoes" });
         return;
       }
       if (!codigo || typeof codigo !== "string") return;
@@ -111,7 +111,7 @@ module.exports = function registrarSalaFoco(io) {
 
     socket.on("sala:iniciar", ({ codigo, duracaoSeg, fase }) => {
       if (!dentroDoLimite(socket.id, "sala:iniciar")) {
-        socket.emit("sala:erro", { msg: "Muitas tentativas. Aguarde alguns segundos." });
+        socket.emit("sala:erro", { msg: "muitas_requisicoes" });
         return;
       }
       const sala = salas.get(codigo);
@@ -125,7 +125,7 @@ module.exports = function registrarSalaFoco(io) {
 
     socket.on("sala:pausar", (codigo) => {
       if (!dentroDoLimite(socket.id, "sala:pausar")) {
-        socket.emit("sala:erro", { msg: "Muitas tentativas. Aguarde alguns segundos." });
+        socket.emit("sala:erro", { msg: "muitas_requisicoes" });
         return;
       }
       const sala = salas.get(codigo);
