@@ -48,10 +48,6 @@ app.use("/sessoes", require("./routes/sessoes"));
 app.use("/ia",      require("./routes/ia"));
 app.use("/usuario", require("./routes/usuario"));
 
-// Aliases de compatibilidade — Login.jsx ainda chama /cadastro e /login.
-// TODO: atualizar Login.jsx para /auth/cadastro e /auth/login e remover estas linhas.
-app.post("/cadastro", (req, res) => res.redirect(307, "/auth/cadastro"));
-app.post("/login",    (req, res) => res.redirect(307, "/auth/login"));
 
 // ── 404 ────────────────────────────────────────────────────────
 app.use((req, res) => res.status(404).json({ ok: false, msg: "Rota não encontrada" }));
