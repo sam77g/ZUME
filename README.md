@@ -1,5 +1,15 @@
 # 🍅 ZUME — Plataforma de Produtividade e Estudo
+<p align="center">
 
+<img src="https://img.shields.io/badge/Status-Ativo-success">
+
+<img src="https://img.shields.io/badge/React-18-61DAFB">
+
+<img src="https://img.shields.io/badge/Node.js-22-green">
+
+<img src="https://img.shields.io/badge/PostgreSQL-Supabase-blue">
+
+</p>
 Plataforma web completa para foco e gerenciamento de estudos, integrando o método **Pomodoro** com salas colaborativas em tempo real e geração de conteúdo via **Inteligência Artificial**.
 
 🔗 **[sam-zume.netlify.app](https://sam-zume.netlify.app)**
