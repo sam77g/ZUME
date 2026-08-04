@@ -10,6 +10,7 @@
 <img src="https://img.shields.io/badge/PostgreSQL-Supabase-blue">
 
 </p>
+
 Plataforma web completa para foco e gerenciamento de estudos, integrando o método **Pomodoro** com salas colaborativas em tempo real e geração de conteúdo via **Inteligência Artificial**.
 
 🔗 **[sam-zume.netlify.app](https://sam-zume.netlify.app)**
