@@ -23,6 +23,7 @@ const { limitadorGeral } = require("./middleware/rateLimit");
 const registrarSalaFoco  = require("./sockets/salaFoco");
 
 const app = express();
+app.set("trust proxy", 1);
 
 // ── CORS — fonte única de verdade ──────────────────────────────
 const origensPermitidas = (process.env.FRONTEND_URL || "")
