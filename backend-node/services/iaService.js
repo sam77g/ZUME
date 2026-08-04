@@ -8,11 +8,10 @@ const SYSTEM_PROMPTS = {
 };
 
 function montarPayload({ mensagem, tipo }) {
-  const systemPrompt = SYSTEM_PROMPTS[tipo] || SYSTEM_PROMPTS.duvida;
   return {
     model: "llama3-8b-8192",
     messages: [
-      { role: "system", content: systemPrompt },
+      { role: "system", content: SYSTEM_PROMPTS[tipo] || SYSTEM_PROMPTS.duvida },
       { role: "user",   content: mensagem },
     ],
     max_tokens: 1024,
@@ -21,9 +20,7 @@ function montarPayload({ mensagem, tipo }) {
 
 async function chamarGroq(payload) {
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
-  if (!GROQ_API_KEY) {
-    throw new Error("GROQ_API_KEY não configurada no .env");
-  }
+  if (!GROQ_API_KEY) throw new Error("GROQ_API_KEY não configurada no .env");
 
   const controller = new AbortController();
   const timeoutId  = setTimeout(() => controller.abort(), GROQ_TIMEOUT_MS);
