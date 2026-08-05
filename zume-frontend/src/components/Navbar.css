@@ -46,7 +46,8 @@
 
 /* ── variante light (visual original do Pomodoro) ─────────── */
 .navbar--light {
-  max-width: 700px;
+  max-width: 100%;
+  width: 100%;
   background: transparent;
   box-shadow: none;
   padding: 10px 0 24px;
