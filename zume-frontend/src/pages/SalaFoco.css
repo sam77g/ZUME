@@ -168,3 +168,10 @@
   border-radius: 8px;
   font-size: 0.9rem;
 }
+
+/* ── responsivo mobile ────────────────────────────────────── */
+@media (max-width: 480px) {
+  .sala-container { padding: 16px 12px; }
+  .sala-entrar, .sala-ativa { padding: 20px 16px; width: 100%; box-sizing: border-box; }
+  input[type="text"] { width: 100%; box-sizing: border-box; }
+}

@@ -112,7 +112,7 @@ export default function SalaFoco() {
 
   return (
     <div className="sala-page">
-      <Navbar variant="light" />
+      <Navbar />
       <div className="sala-container">
         {!sala ? (
           <div className="sala-entrar">

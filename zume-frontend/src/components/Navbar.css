@@ -74,3 +74,12 @@
 
 .navbar--light .nav-links a.active { background: var(--verde-escuro, #287B4D); }
 .navbar--light .nav-links img { width: 22px; height: 22px; }
+
+/* ── responsivo mobile ────────────────────────────────────── */
+@media (max-width: 480px) {
+  .navbar { padding: 10px 14px; }
+  .nav-links a { width: 36px; height: 36px; border-radius: 9px; }
+  .nav-links img { width: 18px; height: 18px; }
+  .nav-logo { font-size: 0.95rem; }
+  .nav-logo img { width: 22px; height: 22px; }
+}
