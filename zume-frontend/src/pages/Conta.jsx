@@ -160,7 +160,14 @@ export default function Conta() {
           </div>
           <div className="perfil-info">
             <h2>{usuario.nome}</h2>
-            <p>{usuarioId ? `ID #${usuarioId}` : "Visitante"}</p>
+            <p className="perfil-destaques">
+              {destaques.length > 0
+                ? destaques.map((id) => {
+                    const c = [...CONQUISTAS_TEMPO, ...CONQUISTAS_STREAK].find((x) => x.id === id);
+                    return c ? <span key={id} title={c.nome}>{c.emoji}</span> : null;
+                  })
+                : <span className="perfil-sem-destaque">Nenhum destaque</span>}
+            </p>
           </div>
           <button className="btn-logout" onClick={handleLogout}>Sair</button>
         </div>

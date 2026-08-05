@@ -180,3 +180,5 @@
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .perfil-card { flex-direction: column; text-align: center; }
 }
+.perfil-destaques { display: flex; gap: 8px; font-size: 22px; margin-top: 2px; align-items: center; }
+.perfil-sem-destaque { font-size: 12px; opacity: 0.6; }
