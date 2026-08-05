@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
 
-export default function Navbar({ variant = "solid" }) {
+export default function Navbar({ variant = "light" }) {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
 
