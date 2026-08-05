@@ -9,7 +9,7 @@ const SYSTEM_PROMPTS = {
 
 function montarPayload({ mensagem, tipo }) {
   return {
-    model: "llama3-8b-8192",
+    model: "llama-3.3-70b-versatile",
     messages: [
       { role: "system", content: SYSTEM_PROMPTS[tipo] || SYSTEM_PROMPTS.duvida },
       { role: "user",   content: mensagem },
