@@ -13,7 +13,7 @@
 
 Plataforma web completa para foco e gerenciamento de estudos, integrando o método **Pomodoro** com salas colaborativas em tempo real e geração de conteúdo via **Inteligência Artificial**.
 
-🔗 **[sam-zume.netlify.app](https://sam-zume.netlify.app)**
+🔗 **[zume-78q.pages.dev](https://zume-78q.pages.dev)**
 
 ---
 
@@ -124,7 +124,7 @@ npm run dev
 
 | Camada | Plataforma | URL |
 |---|---|---|
-| Frontend | Netlify | [sam-zume.netlify.app](https://sam-zume.netlify.app) |
+| Frontend | Cloudflare Pages | [zume-78q.pages.dev](https://zume-78q.pages.dev) |
 | Backend | Render | [zume-fawu.onrender.com](https://zume-fawu.onrender.com) |
 | Banco de dados | Supabase (PostgreSQL) | — |
 
