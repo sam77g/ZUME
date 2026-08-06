@@ -91,7 +91,8 @@ Formato exato:
   "resposta": "A",
   "topico": "nome do subtópico desta questão",
   "explicacao": "por que esta é a resposta correta"
-}]`;
+}]
+  IMPORTANTE: Distribua as respostas corretas de forma aleatória entre as letras A, B, C e D. Não concentre as respostas corretas em uma única letra. A distribuição ideal é que cada letra apareça como resposta correta aproximadamente 2 a 3 vezes nas 10 questões.`;
 
     try {
       const res = await fetch(`${API}/ia`, {
