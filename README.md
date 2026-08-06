@@ -365,9 +365,9 @@ O arquivo `public/_redirects` já está configurado para suportar roteamento SPA
 - [x] Gerador de resumos e roteiros com IA
 - [x] Flash cards com IA e seletor de dificuldade
 - [x] Sistema de conquistas e destaques no perfil
+- [x] Analytics de sessões com IA
+- [x] Plano de estudos personalizado por IA
 - [ ] App mobile (Capacitor — `capacitor.config.json` já presente)
-- [ ] Analytics de sessões com IA
-- [ ] Plano de estudos personalizado por IA
 - [ ] Sistema de planos (Basic / Pro / Plus) com limites de uso
 
 ---
