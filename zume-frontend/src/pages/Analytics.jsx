@@ -111,28 +111,9 @@ export default function Analytics() {
           fetch(`${API}/testes/topicos-dificeis`, { headers: authHeaders(token) }),
         ]);
 
-        if (resSessoes.ok) {
-          const json = await resSessoes.json();
-          setSessoes(
-            (json.dias || []).map((d) => ({
-              data: d.dia,
-              minutos: Math.round(parseInt(d.total_seg, 10) / 60),
-            }))
-          );
-        }
-        if (resHistorico.ok) {
-          const json = await resHistorico.json();
-          setHistorico(
-            (json.testes || []).map((t) => ({
-              data: t.criado_em?.slice(0, 10),
-              nota: Math.round((t.acertos / t.total) * 10),
-            }))
-          );
-        }
-        if (resTopicos.ok) {
-          const json = await resTopicos.json();
-          setTopicos(json.topicos || []);
-        }
+        if (resSessoes.ok) setSessoes(await resSessoes.json());
+        if (resHistorico.ok) setHistorico(await resHistorico.json());
+        if (resTopicos.ok) setTopicos(await resTopicos.json());
       } catch {
         setErroLoad("Erro ao carregar dados. Verifique sua conexão.");
       }
@@ -151,11 +132,9 @@ export default function Analytics() {
         method: "POST",
         headers: { "Content-Type": "application/json", ...authHeaders(token) },
         body: JSON.stringify({
-          topicos_errados: (topicos || []).map((t) => t.topico),
-          media_acertos: historico && historico.length > 0
-            ? Math.round(historico.reduce((acc, t) => acc + t.nota * 10, 0) / historico.length)
-            : 0,
-          tempo_total_min: (sessoes || []).reduce((acc, d) => acc + d.minutos, 0),
+          sessoes,
+          historico,
+          topicos,
         }),
       });
       const data = await res.json();
@@ -214,7 +193,7 @@ export default function Analytics() {
                   {topicos.map((t, i) => (
                     <li key={i} className="topico-item">
                       <span className="topico-nome">{t.topico}</span>
-                      <span className="topico-erros">{t.erros} erro{t.erros !== 1 ? "s" : ""}</span>
+                      <span className="topico-erros">{t.total_erros} erro{t.total_erros !== 1 ? "s" : ""}</span>
                     </li>
                   ))}
                 </ul>
