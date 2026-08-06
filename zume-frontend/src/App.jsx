@@ -7,6 +7,9 @@ import EstudoIA from "./pages/EstudoIA";
 import SalaFoco from "./pages/SalaFoco";
 import { getToken } from "./lib/auth";
 import FlashCards from "./pages/FlashCards";
+import Teste from "./pages/Teste";
+import Analytics from "./pages/Analytics";
+import PlanoEstudos from "./pages/PlanoEstudos";
 
 export default function App() {
   const location = useLocation();
@@ -55,10 +58,34 @@ export default function App() {
           }
         />
         <Route
-          path="/flashcards"
+  path="/flashcards"
+  element={
+    <ProtectedRoute>
+      <FlashCards />
+    </ProtectedRoute>
+  }
+/>
+        <Route
+          path="/plano"
           element={
             <ProtectedRoute>
-              <FlashCards />
+              <PlanoEstudos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <Analytics />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/teste"
+          element={
+            <ProtectedRoute>
+              <Teste />
             </ProtectedRoute>
           }
         />
