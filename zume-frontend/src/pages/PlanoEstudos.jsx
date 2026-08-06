@@ -45,7 +45,7 @@ export default function PlanoEstudos() {
       });
       if (res.ok) {
         const data = await res.json();
-        topicosErrados = data.map((t) => t.topico);
+        topicosErrados = (data.topicos || []).map((t) => t.topico);
       }
     } catch {
       // Continua sem tópicos — não é bloqueante
