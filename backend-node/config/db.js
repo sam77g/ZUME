@@ -35,6 +35,17 @@ const inicializarTabelas = async () => {
         criado_em   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS resultados_teste (
+        id           SERIAL PRIMARY KEY,
+        usuario_id   INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        tema         TEXT NOT NULL,
+        total        INTEGER NOT NULL,
+        acertos      INTEGER NOT NULL,
+        topicos_errados TEXT[] DEFAULT '{}',
+        criado_em    TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
     console.log("[DATABASE] Tabelas OK.");
   } catch (err) {
     console.error("[DATABASE] Erro ao criar tabelas:", err.message);

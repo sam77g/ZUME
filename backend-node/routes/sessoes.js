@@ -47,4 +47,25 @@ router.get("/tempo_total", autenticar, async (req, res) => {
   }
 });
 
+// GET /sessoes/analytics
+router.get("/analytics", autenticar, async (req, res) => {
+  try {
+    const ultimos30 = await db.query(
+      `SELECT DATE(criado_em) AS dia,
+              SUM(duracao_seg) AS total_seg,
+              COUNT(*) AS sessoes
+       FROM sessoes
+       WHERE usuario_id = $1
+         AND criado_em >= NOW() - INTERVAL '30 days'
+       GROUP BY dia
+       ORDER BY dia ASC`,
+      [req.usuario.id]
+    );
+    res.json({ ok: true, dias: ultimos30.rows });
+  } catch (err) {
+    console.error("[ANALYTICS]", err.message);
+    res.status(500).json({ ok: false, msg: "Erro ao buscar analytics" });
+  }
+});
+
 module.exports = router;

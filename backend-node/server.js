@@ -51,6 +51,7 @@ app.use(limitadorGeral);
 app.use("/auth",    require("./routes/auth"));
 app.use("/sessoes", require("./routes/sessoes"));
 app.use("/ia",      require("./routes/ia"));
+app.use("/testes",   require("./routes/testes"));
 app.use("/usuario", require("./routes/usuario"));
 
 
