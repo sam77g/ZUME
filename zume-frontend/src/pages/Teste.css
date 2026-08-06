@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --verde-main: #49BA65;
+  --verde-escuro: #287B4D;
+  --verde-deep: rgb(0, 100, 32);
+  --verde-claro: #E2FFDF;
+  --sombra: rgba(5, 27, 11, 0.3);
+}
+
+.teste-page {
+  background-color: var(--verde-claro);
+  font-family: "MuseoModerno", sans-serif;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+.teste-container { max-width: 760px; margin: 40px auto; padding: 0 20px 60px; }
+
+header { margin-bottom: 28px; text-align: center; }
+header h1 { font-size: 28px; color: var(--verde-deep); margin-bottom: 8px; }
+header p { color: #555; font-size: 15px; }
+
+/* ── upload (reutiliza padrão EstudoIA) ── */
+.upload-box {
+  background: #fff;
+  border: 2px dashed var(--verde-main);
+  border-radius: 16px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.upload-box:hover, .upload-box.drag-over { background: rgba(73, 186, 101, 0.08); }
+.upload-icon { font-size: 42px; margin-bottom: 10px; display: block; }
+.upload-box p { font-size: 15px; color: #444; margin: 0; }
+.upload-box span { font-size: 13px; color: #888; display: block; margin-top: 6px; }
+
+.file-badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--verde-claro);
+  color: var(--verde-escuro);
+  border: 1px solid var(--verde-main);
+}
+
+/* ── text-zone (campo tema + textarea) ── */
+.text-zone {
+  margin-top: 20px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.text-zone label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--verde-escuro); }
+.text-zone input[type="text"] {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.text-zone input[type="text"]:focus { outline: none; border-color: var(--verde-main); }
+.text-zone textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.text-zone textarea:focus { outline: none; border-color: var(--verde-main); }
+
+/* ── ações ── */
+.actions { display: flex; gap: 16px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+}
+button:active { transform: scale(0.98); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--verde-main); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--verde-escuro); }
+.btn-secondary { background: #fff; color: var(--verde-escuro); border: 2px solid var(--verde-main); }
+.btn-secondary:hover:not(:disabled) { background: rgba(73, 186, 101, 0.05); }
+
+/* ── spinner / erro ── */
+.spinner {
+  margin: 24px auto;
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(73, 186, 101, 0.2);
+  border-top-color: var(--verde-main);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.aviso-erro {
+  background: #fde8e8;
+  border: 1px solid #e74c3c;
+  color: #c0392b;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  margin-top: 16px;
+}
+
+/* ── barra de progresso ── */
+.teste-progresso {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--verde-escuro);
+  font-weight: 600;
+}
+.progresso-barra {
+  flex: 1;
+  height: 6px;
+  background: rgba(73, 186, 101, 0.2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progresso-fill {
+  height: 100%;
+  background: var(--verde-main);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+/* ── card da questão ── */
+.teste-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.teste-pergunta {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.teste-opcoes { display: flex; flex-direction: column; gap: 10px; }
+.opcao-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fafafa;
+  color: #333;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.opcao-btn:hover { border-color: var(--verde-main); background: rgba(73,186,101,0.05); }
+.opcao-btn.selecionada { border-color: var(--verde-main); background: rgba(73,186,101,0.12); color: var(--verde-deep); }
+.opcao-letra {
+  min-width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--verde-claro);
+  color: var(--verde-escuro);
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.opcao-btn.selecionada .opcao-letra { background: var(--verde-main); color: #fff; }
+
+/* ── nota ── */
+.teste-nota {
+  text-align: center;
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  margin-bottom: 24px;
+}
+.nota-numero { font-size: 72px; font-weight: 900; color: var(--verde-main); line-height: 1; }
+.nota-label { font-size: 28px; color: #999; font-weight: 600; }
+.nota-desc { margin-top: 8px; color: #555; font-size: 15px; }
+
+/* ── tópicos errados ── */
+.teste-topicos-errados {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+.teste-topicos-errados h3 { margin: 0 0 10px; font-size: 14px; color: #856404; }
+.teste-topicos-errados ul { margin: 0; padding-left: 18px; }
+.teste-topicos-errados li { font-size: 13px; color: #5d4037; margin-bottom: 4px; }
+
+/* ── gabarito ── */
+.teste-gabarito { margin-bottom: 32px; }
+.teste-gabarito h3 { font-size: 16px; color: var(--verde-deep); margin-bottom: 16px; }
+.gabarito-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border-left: 4px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.gabarito-item.acerto { border-left-color: var(--verde-main); }
+.gabarito-item.erro { border-left-color: #e74c3c; }
+.gabarito-pergunta { font-size: 14px; font-weight: 600; margin: 0 0 10px; color: #1a1a1a; }
+.gabarito-opcoes { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.gabarito-opcao { font-size: 13px; color: #555; padding: 3px 0; }
+.gabarito-opcao.correta { color: var(--verde-escuro); font-weight: 700; }
+.gabarito-opcao.errada { color: #c0392b; text-decoration: line-through; }
+.gabarito-explicacao { font-size: 13px; color: #666; border-top: 1px solid #f0f0f0; padding-top: 8px; margin: 0; }
+
+/* ── responsivo ── */
+@media (max-width: 480px) {
+  .teste-container { padding: 0 12px 48px; }
+  .teste-card { padding: 20px 16px; }
+  .nota-numero { font-size: 56px; }
+  .opcao-btn { font-size: 13px; }
+}

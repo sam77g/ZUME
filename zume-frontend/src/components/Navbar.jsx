@@ -27,6 +27,15 @@ export default function Navbar({ variant = "light" }) {
         <Link to="/flashcards" title="Flash Cards" className={`nav-emoji${isActive("/flashcards") ? " active" : ""}`}>
             <span>🃏</span>
         </Link>
+        <Link to="/teste" title="Teste de Conhecimento" className={`nav-emoji${isActive("/teste") ? " active" : ""}`}>
+          <span>📝</span>
+        </Link>
+        <Link to="/analytics" title="Analytics" className={`nav-emoji${isActive("/analytics") ? " active" : ""}`}>
+          <span>📊</span>
+        </Link>
+        <Link to="/plano" title="Plano de Estudos" className={`nav-emoji${isActive("/plano") ? " active" : ""}`}>
+          <span>🗓️</span>
+        </Link>
       </div>
     </nav>
   );
