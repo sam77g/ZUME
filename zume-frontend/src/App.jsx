@@ -6,6 +6,7 @@ import Conta from "./pages/Conta";
 import EstudoIA from "./pages/EstudoIA";
 import SalaFoco from "./pages/SalaFoco";
 import { getToken } from "./lib/auth";
+import FlashCards from "./pages/FlashCards";
 
 export default function App() {
   const location = useLocation();
@@ -53,6 +54,14 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/flashcards"
+  element={
+    <ProtectedRoute>
+      <FlashCards />
+    </ProtectedRoute>
+  }
+/>
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </>

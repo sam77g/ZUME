@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
+
+.fc-page {
+  background-color: var(--verde-claro, #E2FFDF);
+  font-family: "MuseoModerno", sans-serif;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+.fc-container { max-width: 700px; margin: 0 auto; padding: 32px 20px 60px; }
+header { text-align: center; margin-bottom: 32px; }
+header h1 { font-size: 28px; color: var(--verde-deep, rgb(0,100,32)); margin-bottom: 8px; }
+header p { color: #555; font-size: 15px; }
+
+.fc-viewer { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+
+.fc-progresso { font-size: 13px; color: var(--verde-escuro, #287B4D); font-weight: 700; letter-spacing: 1px; }
+
+.fc-card {
+  width: 100%;
+  max-width: 560px;
+  height: 260px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.fc-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.fc-card.virado .fc-card-inner { transform: rotateY(180deg); }
+
+.fc-frente, .fc-verso {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: 0 6px 24px var(--sombra, rgba(5,27,11,0.2));
+}
+
+.fc-frente { background: var(--verde-escuro, #287B4D); color: white; }
+.fc-verso { background: white; color: #1a1a1a; transform: rotateY(180deg); border: 2px solid var(--verde-main, #49BA65); }
+
+.fc-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 12px; }
+.fc-frente p, .fc-verso p { font-size: 17px; font-weight: 600; line-height: 1.5; }
+
+.fc-dica { font-size: 12px; color: #888; font-style: italic; }
+
+.fc-nav { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+@media (max-width: 480px) {
+  .fc-card { height: 220px; }
+  .fc-frente p, .fc-verso p { font-size: 15px; }
+}

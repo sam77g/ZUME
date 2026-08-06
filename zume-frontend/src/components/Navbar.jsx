@@ -24,6 +24,9 @@ export default function Navbar({ variant = "light" }) {
         <Link to="/conta" title="Conta" className={isActive("/conta") ? "active" : ""}>
           <img src="/icons/person_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Conta" />
         </Link>
+        <Link to="/flashcards" title="Flash Cards" className={`nav-emoji${isActive("/flashcards") ? " active" : ""}`}>
+            <span>🃏</span>
+        </Link>
       </div>
     </nav>
   );
