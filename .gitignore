@@ -1,22 +1,27 @@
-# Banco de dados
-*.db
+# Dependências
+node_modules/
 
-# Binários compilados
-server
-*.o
-*.out
+# Builds
+dist/
+build/
 
-# Git
-.git
+# Variáveis de ambiente
+.env
+.env.local
+.env.production
 
-# Linux
+# Arquivos temporários e zips
+*.zip
+*.log
+
+# Pastas legadas e desnecessárias
+fonts_google/
+docs/
+
+# Sistema operacional
 .DS_Store
 Thumbs.db
 
-backend/pomodoro.db
-backend/server
-
-node_modules/
-*.db
-.env
-.env.*
+# IDEs
+.vscode/
+.idea/
