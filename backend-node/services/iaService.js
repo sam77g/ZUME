@@ -14,7 +14,7 @@ function montarPayload({ mensagem, tipo }) {
       { role: "system", content: SYSTEM_PROMPTS[tipo] || SYSTEM_PROMPTS.duvida },
       { role: "user",   content: mensagem },
     ],
-    max_tokens: 1024,
+    max_tokens: 4096,
   };
 }
 

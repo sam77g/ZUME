@@ -55,13 +55,13 @@ export default function App() {
           }
         />
         <Route
-  path="/flashcards"
-  element={
-    <ProtectedRoute>
-      <FlashCards />
-    </ProtectedRoute>
-  }
-/>
+          path="/flashcards"
+          element={
+            <ProtectedRoute>
+              <FlashCards />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </>

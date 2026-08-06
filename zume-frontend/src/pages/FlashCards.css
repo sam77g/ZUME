@@ -61,4 +61,33 @@ header p { color: #555; font-size: 15px; }
 @media (max-width: 480px) {
   .fc-card { height: 220px; }
   .fc-frente p, .fc-verso p { font-size: 15px; }
+}.fc-dificuldade { margin-bottom: 24px; text-align: center; }
+.fc-dif-titulo { font-size: 13px; font-weight: 700; color: var(--verde-deep, rgb(0,100,32)); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+.fc-dif-opcoes { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.fc-dif-btn {
+  padding: 8px 16px;
+  border: 2px solid var(--verde-main, #49BA65);
+  border-radius: 10px;
+  background: white;
+  color: var(--verde-escuro, #287B4D);
+  font-family: "MuseoModerno", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
 }
+.fc-dif-btn:hover { background: rgba(73,186,101,0.1); }
+.fc-dif-btn.ativo { background: var(--verde-main, #49BA65); color: white; border-color: var(--verde-main, #49BA65); }
+
+.fc-nivel-badge {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.fc-nivel-muitofacil { background: #d4edda; color: #155724; }
+.fc-nivel-facil      { background: #cce5ff; color: #004085; }
+.fc-nivel-medio      { background: #fff3cd; color: #856404; }
+.fc-nivel-dificil    { background: #f8d7da; color: #721c24; }

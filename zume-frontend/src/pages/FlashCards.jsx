@@ -36,6 +36,7 @@ export default function FlashCards() {
   const [cards, setCards] = useState([]);
   const [indice, setIndice] = useState(0);
   const [virado, setVirado] = useState(false);
+  const [dificuldade, setDificuldade] = useState("medio");
   const fileInputRef = useRef(null);
 
   function processarArquivo(file) {
@@ -75,9 +76,30 @@ export default function FlashCards() {
     setIndice(0);
     setVirado(false);
 
-    const mensagem = `A partir do texto abaixo, gere entre 5 e 10 flash cards para estudo.
+    const instrucoesDificuldade = {
+      muitofacil: "Os cards devem ser extremamente simples: definições básicas, conceitos introdutórios, perguntas diretas com respostas curtas. Gere 5 cards neste nível.",
+      facil: "Os cards devem ser simples: conceitos fundamentais, perguntas objetivas. Gere 5 cards neste nível.",
+      medio: "Os cards devem exigir compreensão: relações entre conceitos, aplicações práticas. Gere 5 cards neste nível.",
+      dificil: "Os cards devem ser desafiadores: análise crítica, detalhes técnicos, casos específicos, exceções. Gere 5 cards neste nível.",
+    };
+
+    const distribuicao = {
+      muitofacil: { muitofacil: 14, facil: 3, medio: 2, dificil: 1 },
+      facil:       { muitofacil: 4,  facil: 10, medio: 4, dificil: 2 },
+      medio:       { muitofacil: 2,  facil: 4,  medio: 10, dificil: 4 },
+      dificil:     { muitofacil: 1,  facil: 2,  medio: 4, dificil: 13 },
+    };
+
+    const dist = distribuicao[dificuldade];
+
+    const mensagem = `A partir do texto abaixo, gere exatamente 20 flash cards para estudo, distribuídos em 4 níveis de dificuldade:
+- Muito Fácil: ${dist.muitofacil} cards — ${instrucoesDificuldade.muitofacil}
+- Fácil: ${dist.facil} cards — ${instrucoesDificuldade.facil}
+- Médio: ${dist.medio} cards — ${instrucoesDificuldade.medio}
+- Difícil: ${dist.dificil} cards — ${instrucoesDificuldade.dificil}
+
 Responda APENAS com um array JSON válido, sem texto adicional, sem markdown, sem blocos de código.
-Formato exato: [{"frente":"pergunta","verso":"resposta"}]
+Formato exato: [{"frente":"pergunta","verso":"resposta","nivel":"muitofacil|facil|medio|dificil"}]
 
 Texto:
 ${textoMaterial}`;
@@ -117,6 +139,28 @@ ${textoMaterial}`;
         </header>
 
         {cards.length === 0 && (
+          <div className="fc-dificuldade">
+            <p className="fc-dif-titulo">Nível de dificuldade</p>
+            <div className="fc-dif-opcoes">
+              {[
+                { id: "muitofacil", label: "😊 Muito Fácil" },
+                { id: "facil",      label: "🙂 Fácil" },
+                { id: "medio",      label: "😤 Médio" },
+                { id: "dificil",    label: "💀 Difícil" },
+              ].map((op) => (
+                <button
+                  key={op.id}
+                  className={`fc-dif-btn${dificuldade === op.id ? " ativo" : ""}`}
+                  onClick={() => setDificuldade(op.id)}
+                >
+                  {op.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {cards.length === 0 && (
           <>
             <div
               className={`upload-box${dragOver ? " drag-over" : ""}`}
@@ -151,7 +195,14 @@ ${textoMaterial}`;
 
         {cards.length > 0 && (
           <div className="fc-viewer">
-            <p className="fc-progresso">{indice + 1} / {cards.length}</p>
+            <p className="fc-progresso">
+              {indice + 1} / {cards.length}
+              {card.nivel && (
+                <span className={`fc-nivel-badge fc-nivel-${card.nivel}`}>
+                  {{ muitofacil: "😊 Muito Fácil", facil: "🙂 Fácil", medio: "😤 Médio", dificil: "💀 Difícil" }[card.nivel]}
+                </span>
+              )}
+            </p>
 
             <div className={`fc-card${virado ? " virado" : ""}`} onClick={() => setVirado(!virado)}>
               <div className="fc-card-inner">
